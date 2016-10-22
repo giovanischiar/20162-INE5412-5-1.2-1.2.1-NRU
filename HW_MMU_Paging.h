@@ -54,6 +54,7 @@ protected:
     virtual PhysicalAddress translateAddress(LogicalAddress logical, Operation operation);
 private:
     PhysicalAddress _PTBR; // Page Table Base Register
+    LogicalAddress _logicalAddressMissed;
 };
 
 #endif /* HW_MMU_PAGING_H */

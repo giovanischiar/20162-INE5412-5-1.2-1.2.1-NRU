@@ -13,6 +13,7 @@
 
 #include "Mediator_MMU.h"
 #include "HW_Machine.h"
+#include "HW_MMU.h"
 
 MMU::MMU(unsigned int instance) {
     _instance = instance;
@@ -34,6 +35,5 @@ void MMU::protection_error_interrupt_handler() {
 }
 
 void MMU::chunk_fault_interrupt_handler() {
-    // INSERT YOUR CODE HERE
-    // ...
+    HW_MMU::LogicalAddress logicalAddressMissed = HW_Machine::MMU()->readRegister(1);
 }

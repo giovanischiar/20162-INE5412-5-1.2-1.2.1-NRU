@@ -40,17 +40,26 @@ HW_MMU_Paging::HW_MMU_Paging(const HW_MMU_Paging& orig) {
 HW_MMU_Paging::~HW_MMU_Paging() {
 }
 
- HW_MMU::Register HW_MMU_Paging::readRegister(unsigned int registerNum) {
-     if (registerNum==0) {
-        return this->_PTBR;
-     }
-     return 0;
- }
- void HW_MMU_Paging::writeRegister(unsigned int registerNum, HW_MMU::Register value) {
-    if (registerNum==0) {
-        this->_PTBR = value;
-    } 
- }
+HW_MMU::Register HW_MMU_Paging::readRegister(unsigned int registerNum) {
+    switch (registerNum) {
+        case 0:
+            return this->_PTBR;
+        case 1:
+            return this->_logicalAddressMissed;
+        default:
+            return 0;
+    }
+}
+void HW_MMU_Paging::writeRegister(unsigned int registerNum, HW_MMU::Register value) {
+    switch (registerNum) {
+        case 0:
+            this->_PTBR = value;
+            break;
+        case 1:
+            this->_logicalAddressMissed = value;
+            break;
+    }
+}
 
 HW_MMU::PhysicalAddress HW_MMU_Paging::translateAddress(HW_MMU::LogicalAddress logical, Operation operation) {
     unsigned int logicalPageNumber = (logical & HW_MMU_Paging::mask_LogicalPage) >> HW_MMU_Paging::off_LogicalPage;
@@ -73,6 +82,7 @@ HW_MMU::PhysicalAddress HW_MMU_Paging::translateAddress(HW_MMU::LogicalAddress l
         PhysicalAddress phys = (frameNumber << HW_MMU_Paging::off_LogicalPage) + logicalPageOffset;
         return phys;
     } else { // page fault
+        writeRegister(1, logical);
         // schedule an event to notify that a protection error just happened
         Simulator* simulator = Simulator::getInstance();
         Entity* entity = simulator->getEntity();
