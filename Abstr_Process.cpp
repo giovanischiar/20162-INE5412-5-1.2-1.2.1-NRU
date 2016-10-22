@@ -21,15 +21,7 @@ Process::Process(unsigned int parentId) {
     this->_idInfo._priority = Simulator::generate_uniform_distribution(0, 10);
     this->_memInfo._chunks = new std::list<MemoryChunk*>();
     // random memory info about the new process
-    unsigned int numSegments = Simulator::generate_uniform_distribution(2, 5);
-    unsigned long lastLogicalAddress;
-    unsigned int size;
-    for (unsigned int i = 0; i < numSegments; i++) {
-        size = Simulator::generate_uniform_distribution(250 / (numSegments + 3), 250 / numSegments);
-        MemoryChunk* logicalChunk = new MemoryChunk(lastLogicalAddress, size, false, false, false); // logical chunks that have to be allocated into memory
-        _memInfo._chunks->insert(_memInfo._chunks->begin(), logicalChunk);
-        lastLogicalAddress += size;
-    }
+
     // INSERT YOUR CODE HERE
     // ...
 }
@@ -63,7 +55,19 @@ Process* Process::exec() { /*static*/
     Process* newProcess = new Process(0);
 
     // alocar memória para ele
-
+    unsigned int numSegments = Simulator::generate_uniform_distribution(2, 5);
+    unsigned long lastLogicalAddress;
+    unsigned int size;
+    ChunkTable _memInfo = newProcess->_memInfo;
+    
+    for (unsigned int i = 0; i < numSegments; i++) {
+        size = Simulator::generate_uniform_distribution(250 / (numSegments + 3), 250 / numSegments);
+        MemoryChunk* logicalChunk = new MemoryChunk(lastLogicalAddress, size, false, false, false); // logical chunks that have to be allocated into memory
+        _memInfo._chunks->insert(_memInfo._chunks->begin(), logicalChunk);
+        lastLogicalAddress += size;
+    }
+    
+    
     // inicializar seus atributos
 
     // colocá-lo na lista de processos no sistema
