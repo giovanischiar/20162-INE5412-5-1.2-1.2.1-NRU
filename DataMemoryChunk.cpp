@@ -14,12 +14,14 @@
 #include "DataMemoryChunk.h"
 #include <algorithm>
 #include <iostream>
+#include <string.h>
 
 
 DataMemoryChunk::DataMemoryChunk(LogicalAddress beginAddress, unsigned int size, bool isExecutable, bool isReadable, bool isWritable) 
     : MemoryChunk(beginAddress, size, isExecutable, isReadable, isWritable)
 {
     data = new Information[size];
+    memset(data, 0, size*sizeof(Information));
 }
 
 DataMemoryChunk::DataMemoryChunk(const DataMemoryChunk& orig) 
@@ -53,4 +55,5 @@ void DataMemoryChunk::setValue(unsigned int index, Information value) {
     }
     
     data[index] = value;
+    std::cout << "set DataMemoryChun.data[" << index << "] = " << value << std::endl;
 }

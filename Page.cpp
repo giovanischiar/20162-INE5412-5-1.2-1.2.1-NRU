@@ -12,9 +12,11 @@
  */
 
 #include "Page.h"
+#include <iostream>
 
-Page::Page(Information (& data)[PAGESIZE], bool isReadable, bool isWritable, bool isExecutable)
-    :   isReadable(isReadable),
+Page::Page(LogicalAddress base, Information (& data)[PAGESIZE], bool isReadable, bool isWritable, bool isExecutable)
+    :   base(base),    
+        isReadable(isReadable),
         isWritable(isWritable),
         isExecutable(isExecutable)
 {
@@ -41,3 +43,7 @@ bool Page::isIsReadable() const {
 
 Information const* Page::getData() const{return data;}
 
+Information Page::getValue(unsigned int index) const {   
+    std::cout << "get Page.data[" << index-base << "] = " << data[index-base] << std::endl;
+    return data[index-base];
+}

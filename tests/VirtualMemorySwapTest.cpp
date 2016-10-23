@@ -44,7 +44,7 @@ void VirtualMemorySwapTest::testFillSwapWithEmptyList() {
 void VirtualMemorySwapTest::testFillSwapWithSingleChunk() {
     std::list<DataMemoryChunk> chunks;
     DataMemoryChunk chunk(0, 2*PAGESIZE, true, false, false);
-    chunk.setValue(50, 123);
+    chunk.setValue(3, 123);
     chunks.push_back(chunk);
     
     VirtualMemorySwap swap;
@@ -54,21 +54,22 @@ void VirtualMemorySwapTest::testFillSwapWithSingleChunk() {
     bool isEmpty = std::all_of(swapArea, swapArea+SWAPAREASIZE, [swapArea](int x){ return x==0; });
     CPPUNIT_ASSERT(!isEmpty);
     
-    Page page = swap.getPage(50);
+    Page page = swap.getPage(3);
     CPPUNIT_ASSERT(page.isIsExecutable());
     CPPUNIT_ASSERT(!page.isIsReadable());
     CPPUNIT_ASSERT(!page.isIsWritable());
-    CPPUNIT_ASSERT_EQUAL(page.getData()[50], (Information)123);
+    CPPUNIT_ASSERT_EQUAL(page.getValue(3), (Information)123);
 }
 
 void VirtualMemorySwapTest::testFillSwapWithFullChunks() {
     std::list<DataMemoryChunk> chunks;
     std::cout << "PAGE SIZE: " << PAGESIZE << std::endl;
     int j = 0;
-    for(int i = 0; i < 2048; i++) {
-        DataMemoryChunk chunk(j, j+2*PAGESIZE, true, false, false);
+    int pageCount = SWAPAREASIZE/PAGESIZE;
+    for(int i = 0; i < pageCount/2; i++) {
+        DataMemoryChunk chunk(j, 2*PAGESIZE, true, false, false);
         chunk.setValue(0, i);
-//        chunk.setValue(PAGESIZE, i);
+        chunk.setValue(PAGESIZE, i);
         chunks.push_back(chunk);
         j += 2*PAGESIZE;
     }
@@ -80,19 +81,17 @@ void VirtualMemorySwapTest::testFillSwapWithFullChunks() {
     bool isEmpty = std::all_of(swapArea, swapArea+SWAPAREASIZE, [swapArea](int x){ return x==0; });
     CPPUNIT_ASSERT(!isEmpty);
     j = 0;
-    for(int i = 0; i < 4096; i+=2) {
-        std::cout << "i: " << i << std::endl;
-        std::cout << "j: " << j << std::endl;
+    for(int i = 0; i < pageCount; i+=2) {
         Page page = swap.getPage(i*PAGESIZE);
-        Page page1 = swap.getPage((i*PAGESIZE));
+        Page page1 = swap.getPage((i*PAGESIZE)+PAGESIZE);
         CPPUNIT_ASSERT(page.isIsExecutable());
         CPPUNIT_ASSERT(!page.isIsReadable());
         CPPUNIT_ASSERT(!page.isIsWritable());
         CPPUNIT_ASSERT(page1.isIsExecutable());
         CPPUNIT_ASSERT(!page1.isIsReadable());
         CPPUNIT_ASSERT(!page1.isIsWritable());
-        CPPUNIT_ASSERT_EQUAL(page.getData()[0], (Information)(j));
-//        CPPUNIT_ASSERT_EQUAL(page1.getData()[0], (Information)(j));
+        CPPUNIT_ASSERT_EQUAL(page.getValue(i*PAGESIZE), (Information)(j));
+        CPPUNIT_ASSERT_EQUAL(page1.getValue((i*PAGESIZE)+PAGESIZE), (Information)(j));
         j++;
     }
 }

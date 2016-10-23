@@ -22,15 +22,17 @@ typedef HW_MMU::Information Information;
 
 class Page {
 public:
-    Page(Information (& data)[PAGESIZE], bool isReadable, bool isWritable, bool isExecutable);
+    Page(LogicalAddress base, Information (& data)[PAGESIZE], bool isReadable, bool isWritable, bool isExecutable);
     Page(const Page& orig);
     virtual ~Page();
     bool isIsExecutable() const;
     bool isIsWritable() const;
     bool isIsReadable() const;
     Information const* getData() const;
+    Information getValue(unsigned int index) const;
 private:
     Information data[PAGESIZE];
+    LogicalAddress base;
     bool isReadable;
     bool isWritable;
     bool isExecutable;

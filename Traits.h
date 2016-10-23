@@ -90,8 +90,8 @@ template<> struct Traits<Debug> { // CHANGE THE DEBUG LEVEL HERE SETTING THE LEV
 
 template<> struct Traits<Process> {
     static constexpr double timeBetweenCreations = 5e4; // time units
-    static constexpr unsigned int minAddressSpace = 1e7; // bytes
-    static constexpr unsigned int maxAddressSpace = 1e7; // bytes
+    static constexpr unsigned int minAddressSpace = 64; // bytes
+    static constexpr unsigned int maxAddressSpace = 64; // bytes
 };
 
 
@@ -106,14 +106,14 @@ template<> struct Traits<Thread> {
 template<> struct Traits<MemoryManager> {
     enum AllocationAlgorithm {FirstFit, NextFit, BestFit, WorstFit};
     enum ReplacementAlgorithm {FIFO, LRU, LFU, NFU, SecondChance};
-    static constexpr unsigned int physicalMemorySize = 1048576; // bytes
-    static constexpr unsigned int pageSize = 4096; // bytes
+    static constexpr unsigned int physicalMemorySize = 32; // bytes
+    static constexpr unsigned int pageSize = 8; // bytes
     static constexpr AllocationAlgorithm allocationAlgorithm = AllocationAlgorithm::BestFit;
     static constexpr ReplacementAlgorithm replacementAlgorithm = ReplacementAlgorithm::FIFO;
 };
 
 template<> struct Traits<VirtualMemorySwap> {
-    static constexpr unsigned int swapAreaSize = 16777216; // bytes
+    static constexpr unsigned int swapAreaSize = 64; // bytes
 };
 
 template<> struct Traits<Scheduler<Thread>> {

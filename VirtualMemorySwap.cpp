@@ -15,12 +15,14 @@
 
 #include "VirtualMemorySwap.h"
 #include "Traits.h"
+#include <string.h>
 
 VirtualMemorySwap::VirtualMemorySwap() {
     swapArea = new Information[SWAPAREASIZE];
 }
 
 void VirtualMemorySwap::fillSwap(List<DataMemoryChunk> chunks) {
+    memset(swapArea, 0, Traits<VirtualMemorySwap>::swapAreaSize);
     std::list<DataMemoryChunk>::iterator it;
     int j = 0;
     for(it = chunks.begin(); it != chunks.end(); it++) {
@@ -32,9 +34,9 @@ void VirtualMemorySwap::fillSwap(List<DataMemoryChunk> chunks) {
                                              it->isIsReadable(),
                                              it->isIsWritable());
         this->chunks.push_back(chunk);
-//        for(int i = 0; i < size; i++) {
-//            swapArea[i+j] = chunkArray[i];
-//        }
+        for(int i = 0; i < size; i++) {
+            swapArea[i+j] = chunkArray[i];
+        }
         j += size;
     }
 }
@@ -60,7 +62,7 @@ Page VirtualMemorySwap::getPage(LogicalAddress address) {
         }
     }
     
-    return Page(pageData, isReadable, isWritable, isExecutable);
+    return Page(baseAddress, pageData, isReadable, isWritable, isExecutable);
 }
 
 VirtualMemorySwap::VirtualMemorySwap(const VirtualMemorySwap& orig) {
@@ -73,7 +75,10 @@ std::vector<MemoryChunk*> VirtualMemorySwap::getChunks() const {
     return chunks;
 }
 
-Information* VirtualMemorySwap::getSwapArea() const{return swapArea;}
+Information* VirtualMemorySwap::getSwapArea() const{
+    dumpSwapArea();
+    return swapArea;
+}
 
 void VirtualMemorySwap::dumpChunks() const {
     std::cout << "Dumping Swap Chunks" << std::endl;
@@ -87,4 +92,12 @@ void VirtualMemorySwap::dumpChunks() const {
         std::cout << "is writable(" << chunk->isIsWritable() << ")" << std::endl;
     }
     std::cout << "Finished Dumping Swap Chunks" << std::endl;
+}
+
+void VirtualMemorySwap::dumpSwapArea() const {
+    std::cout << "Dumping Swap Area" << std::endl;
+    for (int i = 0; i < SWAPAREASIZE; i++) {
+        std::cout << "swaparea[" << i << "]" << " = " << swapArea[i] << std::endl;
+    }
+    std::cout << "Finished Dumping Swap Area" << std::endl;
 }

@@ -19,7 +19,7 @@
 #include "Page.h"
 
 #define List std::list
-#define SWAPAREASIZE Traits<VirtualMemorySwap>::swapAreaSize/sizeof(Information)
+#define SWAPAREASIZE (Traits<VirtualMemorySwap>::swapAreaSize/sizeof(Information))
 
 class VirtualMemorySwap {
 public:
@@ -36,6 +36,7 @@ private:
     std::vector<MemoryChunk*> chunks;
     
     void dumpChunks() const;
+    void dumpSwapArea() const;
 };
 
 #endif /* VIRTUALMEMORYSWAP_H */
