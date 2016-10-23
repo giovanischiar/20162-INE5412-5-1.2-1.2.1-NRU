@@ -32,9 +32,9 @@ void VirtualMemorySwap::fillSwap(List<DataMemoryChunk> chunks) {
                                              it->isIsReadable(),
                                              it->isIsWritable());
         this->chunks.push_back(chunk);
-        for(int i = 0; i < size; i++) {
-            swapArea[i+j] = chunkArray[i];
-        }
+//        for(int i = 0; i < size; i++) {
+//            swapArea[i+j] = chunkArray[i];
+//        }
         j += size;
     }
 }
@@ -48,8 +48,19 @@ Page VirtualMemorySwap::getPage(LogicalAddress address) {
         pageData[j] = swapArea[i];
         j++;
     }
-    MemoryChunk* chunk = chunks.at(pageNumber);
-    return Page(pageData, chunk->isIsReadable(), chunk->isIsWritable(), chunk->isIsExecutable());
+    
+    bool isExecutable, isReadable, isWritable;
+    for (auto it = chunks.begin(); it != chunks.end(); ++it) {
+        MemoryChunk* chunk = *it;
+        if (chunk->getBeginLogicalAddress() <= baseAddress && baseAddress < chunk->getBeginLogicalAddress()+chunk->getSize()) {
+            isExecutable = chunk->isIsExecutable();
+            isReadable = chunk->isIsReadable();
+            isWritable = chunk->isIsWritable();
+            break;
+        }
+    }
+    
+    return Page(pageData, isReadable, isWritable, isExecutable);
 }
 
 VirtualMemorySwap::VirtualMemorySwap(const VirtualMemorySwap& orig) {

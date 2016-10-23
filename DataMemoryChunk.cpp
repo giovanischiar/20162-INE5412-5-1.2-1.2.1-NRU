@@ -13,6 +13,8 @@
 
 #include "DataMemoryChunk.h"
 #include <algorithm>
+#include <iostream>
+
 
 DataMemoryChunk::DataMemoryChunk(LogicalAddress beginAddress, unsigned int size, bool isExecutable, bool isReadable, bool isWritable) 
     : MemoryChunk(beginAddress, size, isExecutable, isReadable, isWritable)

@@ -61,3 +61,39 @@ void VirtualMemorySwapTest::testFillSwapWithSingleChunk() {
     CPPUNIT_ASSERT_EQUAL(page.getData()[50], (Information)123);
 }
 
+void VirtualMemorySwapTest::testFillSwapWithFullChunks() {
+    std::list<DataMemoryChunk> chunks;
+    std::cout << "PAGE SIZE: " << PAGESIZE << std::endl;
+    int j = 0;
+    for(int i = 0; i < 2048; i++) {
+        DataMemoryChunk chunk(j, j+2*PAGESIZE, true, false, false);
+        chunk.setValue(0, i);
+//        chunk.setValue(PAGESIZE, i);
+        chunks.push_back(chunk);
+        j += 2*PAGESIZE;
+    }
+   
+    VirtualMemorySwap swap;
+    swap.fillSwap(chunks);
+    CPPUNIT_ASSERT(!swap.getChunks().empty());
+    Information* swapArea = swap.getSwapArea();
+    bool isEmpty = std::all_of(swapArea, swapArea+SWAPAREASIZE, [swapArea](int x){ return x==0; });
+    CPPUNIT_ASSERT(!isEmpty);
+    j = 0;
+    for(int i = 0; i < 4096; i+=2) {
+        std::cout << "i: " << i << std::endl;
+        std::cout << "j: " << j << std::endl;
+        Page page = swap.getPage(i*PAGESIZE);
+        Page page1 = swap.getPage((i*PAGESIZE));
+        CPPUNIT_ASSERT(page.isIsExecutable());
+        CPPUNIT_ASSERT(!page.isIsReadable());
+        CPPUNIT_ASSERT(!page.isIsWritable());
+        CPPUNIT_ASSERT(page1.isIsExecutable());
+        CPPUNIT_ASSERT(!page1.isIsReadable());
+        CPPUNIT_ASSERT(!page1.isIsWritable());
+        CPPUNIT_ASSERT_EQUAL(page.getData()[0], (Information)(j));
+//        CPPUNIT_ASSERT_EQUAL(page1.getData()[0], (Information)(j));
+        j++;
+    }
+}
+

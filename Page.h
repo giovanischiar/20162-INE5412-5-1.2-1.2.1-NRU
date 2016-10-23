@@ -18,7 +18,7 @@
 
 typedef HW_MMU::LogicalAddress LogicalAddress;
 typedef HW_MMU::Information Information;
-#define PAGESIZE Traits<MemoryManager>::pageSize/sizeof(Information)
+#define PAGESIZE (Traits<MemoryManager>::pageSize/sizeof(Information))
 
 class Page {
 public:

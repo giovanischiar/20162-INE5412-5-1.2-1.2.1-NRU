@@ -19,8 +19,9 @@
 class VirtualMemorySwapTest : public CPPUNIT_NS::TestFixture {
     CPPUNIT_TEST_SUITE(VirtualMemorySwapTest);
 
-    CPPUNIT_TEST(testFillSwapWithEmptyList);
-    CPPUNIT_TEST(testFillSwapWithSingleChunk);
+//    CPPUNIT_TEST(testFillSwapWithEmptyList);
+//    CPPUNIT_TEST(testFillSwapWithSingleChunk);
+    CPPUNIT_TEST(testFillSwapWithFullChunks);
 
     CPPUNIT_TEST_SUITE_END();
 
@@ -33,6 +34,7 @@ public:
 private:
     void testFillSwapWithEmptyList();
     void testFillSwapWithSingleChunk();
+    void testFillSwapWithFullChunks();
 };
 
 #endif /* VIRTUALMEMORYSWAPTEST_H */
