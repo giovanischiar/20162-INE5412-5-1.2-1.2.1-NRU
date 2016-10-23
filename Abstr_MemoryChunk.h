@@ -10,11 +10,12 @@
 
 #include "HW_MMU.h"
 
+typedef HW_MMU::PhysicalAddress PhysicalAddress;
+typedef HW_MMU::LogicalAddress LogicalAddress;
+
 class MemoryChunk {
     friend class ProblemTester;
     
-    typedef HW_MMU::PhysicalAddress PhysicalAddress;
-    typedef HW_MMU::LogicalAddress LogicalAddress;
 public:
     
     MemoryChunk(LogicalAddress beginAddress, unsigned int size, bool isExecutable, bool isReadable, bool isWritable) {
@@ -26,6 +27,12 @@ public:
     }
 
     MemoryChunk(const MemoryChunk& orig) {
+        _beginLogicalAddress = orig.getBeginLogicalAddress();
+        _beginPhysicalAddress = orig.getBeginPhysicalAddress();
+        _size = orig.getSize();
+        _isReadable = orig.isIsReadable();
+        _isWritable = orig.isIsWritable();
+        _isExecutable = orig.isIsExecutable();
     }
 
     virtual ~MemoryChunk() {

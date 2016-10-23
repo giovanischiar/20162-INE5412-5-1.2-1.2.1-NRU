@@ -6,22 +6,6 @@
     </data>
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
-        <group>
-            <file>file:/home/cancian/INE5412_OperatingSystemSimulator/BackupOldStuffDontWork/removed/HW_Machine.h</file>
-            <file>file:/home/cancian/INE5412_OperatingSystemSimulator/BackupOldStuffDontWork/removed/HW_MMU.cpp</file>
-            <file>file:/home/cancian/INE5412_OperatingSystemSimulator/BackupOldStuffDontWork/removed/Abstr_MemoryManager.cpp</file>
-            <file>file:/home/cancian/INE5412_OperatingSystemSimulator/BackupOldStuffDontWork/removed/Abstr_MemoryChunk.h</file>
-            <file>file:/home/cancian/INE5412_OperatingSystemSimulator/BackupOldStuffDontWork/removed/OperatingSystem.h</file>
-            <file>file:/home/cancian/INE5412_OperatingSystemSimulator/BackupOldStuffDontWork/removed/HW_HardDisk.cpp</file>
-            <file>file:/home/cancian/INE5412_OperatingSystemSimulator/BackupOldStuffDontWork/removed/Mediator_HardDisk.h</file>
-            <file>file:/home/cancian/INE5412_OperatingSystemSimulator/BackupOldStuffDontWork/removed/HW_HardDisk.h</file>
-            <file>file:/home/cancian/INE5412_OperatingSystemSimulator/BackupOldStuffDontWork/removed/HW_RAM.cpp</file>
-            <file>file:/home/cancian/INE5412_OperatingSystemSimulator/BackupOldStuffDontWork/removed/HW_Machine.cpp</file>
-            <file>file:/home/cancian/INE5412_OperatingSystemSimulator/BackupOldStuffDontWork/removed/HW_RAM.h</file>
-            <file>file:/home/cancian/INE5412_OperatingSystemSimulator/BackupOldStuffDontWork/removed/Traits.h</file>
-            <file>file:/home/cancian/INE5412_OperatingSystemSimulator/BackupOldStuffDontWork/removed/Abstr_MemoryChunk.cpp</file>
-            <file>file:/home/cancian/INE5412_OperatingSystemSimulator/BackupOldStuffDontWork/removed/HW_MMU.h</file>
-        </group>
         <group name="Classes">
             <file>file:/home/cancian/Laboratory/Software_Lab/IA32_Architecture/INE5412/20162-INE5412-SC-Theme1-StartPoint/HW_HardDisk.cpp</file>
             <file>file:/home/cancian/Laboratory/Software_Lab/IA32_Architecture/INE5412/20162-INE5412-SC-Theme1-StartPoint/HW_MMU_Paging.h</file>
@@ -35,6 +19,45 @@
             <file>file:/home/cancian/Laboratory/Software_Lab/IA32_Architecture/INE5412/20162-INE5412-SC-Theme1-StartPoint/main.cpp</file>
             <file>file:/home/cancian/Laboratory/Software_Lab/IA32_Architecture/INE5412/20162-INE5412-SC-Theme1-StartPoint/HW_MMU_Continuous.cpp</file>
             <file>file:/home/cancian/Laboratory/Software_Lab/IA32_Architecture/INE5412/20162-INE5412-SC-Theme1-StartPoint/HW_MMU.cpp</file>
+        </group>
+        <group>
+            <file>file:/home/giovani/workspace/c++/20162-INE5412-5-1-2-1.2.1-NRU/Abstr_MemoryManager.cpp</file>
+            <file>file:/home/giovani/workspace/c++/20162-INE5412-5-1-2-1.2.1-NRU/OperatingSystem.cpp</file>
+            <file>file:/home/giovani/workspace/c++/20162-INE5412-5-1-2-1.2.1-NRU/Abstr_FileSystem.cpp</file>
+            <file>file:/home/giovani/workspace/c++/20162-INE5412-5-1-2-1.2.1-NRU/Abstr_MemoryManager.h</file>
+            <file>file:/home/giovani/workspace/c++/20162-INE5412-5-1-2-1.2.1-NRU/Simul_Entity.h</file>
+            <file>file:/home/giovani/workspace/c++/20162-INE5412-5-1-2-1.2.1-NRU/HW_MMU_Paging.h</file>
+            <file>file:/home/giovani/workspace/c++/20162-INE5412-5-1-2-1.2.1-NRU/Abstr_Alarm.cpp</file>
+            <file>file:/home/giovani/workspace/c++/20162-INE5412-5-1-2-1.2.1-NRU/Page.cpp</file>
+            <file>file:/home/giovani/workspace/c++/20162-INE5412-5-1-2-1.2.1-NRU/HW_MMU_Segmentation.cpp</file>
+            <file>file:/home/giovani/workspace/c++/20162-INE5412-5-1-2-1.2.1-NRU/Traits.h</file>
+            <file>file:/home/giovani/workspace/c++/20162-INE5412-5-1-2-1.2.1-NRU/Abstr_MemoryChunk.cpp</file>
+            <file>file:/home/giovani/workspace/c++/20162-INE5412-5-1-2-1.2.1-NRU/HW_MMU_Paging.cpp</file>
+            <file>file:/home/giovani/workspace/c++/20162-INE5412-5-1-2-1.2.1-NRU/SourceModule.h</file>
+            <file>file:/home/giovani/workspace/c++/20162-INE5412-5-1-2-1.2.1-NRU/Mediator_HardDisk.cpp</file>
+            <file>file:/home/giovani/workspace/c++/20162-INE5412-5-1-2-1.2.1-NRU/Abstr_MemoryChunk.h</file>
+            <file>file:/home/giovani/workspace/c++/20162-INE5412-5-1-2-1.2.1-NRU/Mediator_CPU.cpp</file>
+            <file>file:/home/giovani/workspace/c++/20162-INE5412-5-1-2-1.2.1-NRU/DataMemoryChunk.h</file>
+            <file>file:/home/giovani/workspace/c++/20162-INE5412-5-1-2-1.2.1-NRU/HW_RAM.h</file>
+            <file>file:/home/giovani/workspace/c++/20162-INE5412-5-1-2-1.2.1-NRU/VirtualMemorySwap.cpp</file>
+            <file>file:/home/giovani/workspace/c++/20162-INE5412-5-1-2-1.2.1-NRU/Abstr_FileSystem.h</file>
+            <file>file:/home/giovani/workspace/c++/20162-INE5412-5-1-2-1.2.1-NRU/HW_HardDisk.h</file>
+            <file>file:/home/giovani/workspace/c++/20162-INE5412-5-1-2-1.2.1-NRU/Abstr_Process.cpp</file>
+            <file>file:/home/giovani/workspace/c++/20162-INE5412-5-1-2-1.2.1-NRU/HW_RAM.cpp</file>
+            <file>file:/home/giovani/workspace/c++/20162-INE5412-5-1-2-1.2.1-NRU/Abstr_FileAllocationTable.cpp</file>
+            <file>file:/home/giovani/workspace/c++/20162-INE5412-5-1-2-1.2.1-NRU/Page.h</file>
+            <file>file:/home/giovani/workspace/c++/20162-INE5412-5-1-2-1.2.1-NRU/main.cpp</file>
+            <file>file:/home/giovani/workspace/c++/20162-INE5412-5-1-2-1.2.1-NRU/OperatingSystem.h</file>
+            <file>file:/home/giovani/workspace/c++/20162-INE5412-5-1-2-1.2.1-NRU/HW_MMU.cpp</file>
+            <file>file:/home/giovani/workspace/c++/20162-INE5412-5-1-2-1.2.1-NRU/Util_Queue.h</file>
+            <file>file:/home/giovani/workspace/c++/20162-INE5412-5-1-2-1.2.1-NRU/ProblemTester.h</file>
+            <file>file:/home/giovani/workspace/c++/20162-INE5412-5-1-2-1.2.1-NRU/VirtualMemorySwap.h</file>
+            <file>file:/home/giovani/workspace/c++/20162-INE5412-5-1-2-1.2.1-NRU/tests/VirtualMemorySwapTest.cpp</file>
+            <file>file:/home/giovani/workspace/c++/20162-INE5412-5-1-2-1.2.1-NRU/Abstr_Process.h</file>
+            <file>file:/home/giovani/workspace/c++/20162-INE5412-5-1-2-1.2.1-NRU/Mediator_MMU.h</file>
+            <file>file:/home/giovani/workspace/c++/20162-INE5412-5-1-2-1.2.1-NRU/HW_MMU.h</file>
+            <file>file:/home/giovani/workspace/c++/20162-INE5412-5-1-2-1.2.1-NRU/Model.cpp</file>
+            <file>file:/home/giovani/workspace/c++/20162-INE5412-5-1-2-1.2.1-NRU/DataMemoryChunk.cpp</file>
         </group>
     </open-files>
 </project-private>

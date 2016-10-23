@@ -51,19 +51,19 @@ Process* Process::exec() { /*static*/
     Debug::cout(Debug::Level::trace, "Process::exec()");
     // INSERT YOUR CODE HERE (just complete what is missing... easy this time...)
 
-    // criar um Process
+    // criar um Processo
     Process* newProcess = new Process(0);
 
     // alocar memória para ele
     unsigned int numSegments = Simulator::generate_uniform_distribution(2, 5);
     unsigned long lastLogicalAddress;
     unsigned int size;
-    ChunkTable _memInfo = newProcess->_memInfo;
+    ChunkTable memInfo = newProcess->_memInfo;
     
     for (unsigned int i = 0; i < numSegments; i++) {
         size = Simulator::generate_uniform_distribution(250 / (numSegments + 3), 250 / numSegments);
         MemoryChunk* logicalChunk = new MemoryChunk(lastLogicalAddress, size, false, false, false); // logical chunks that have to be allocated into memory
-        _memInfo._chunks->insert(_memInfo._chunks->begin(), logicalChunk);
+        memInfo._chunks->insert(memInfo._chunks->begin(), logicalChunk);
         lastLogicalAddress += size;
     }
     
