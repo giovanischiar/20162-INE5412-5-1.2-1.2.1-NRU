@@ -14,6 +14,8 @@
 #include "Mediator_MMU.h"
 #include "HW_Machine.h"
 #include "HW_MMU.h"
+#include "OperatingSystem.h"
+
 
 MMU::MMU(unsigned int instance) {
     _instance = instance;
@@ -23,10 +25,19 @@ MMU::MMU(unsigned int instance) {
     
 }
 
-MMU::MMU(const MMU& orig) {
+MMU::~MMU() {
+    if (pageTable) {
+        delete pageTable;
+    }
 }
 
-MMU::~MMU() {
+void MMU::createPageTable(int pageCount) {
+    if (pageTable) {
+        delete pageTable;
+    }
+    
+    Information addr = Traits<HW_MMU>::RAMsize-1;
+    pageTable = new PageTable(addr, pageCount);
 }
 
 void MMU::protection_error_interrupt_handler() {
@@ -36,4 +47,10 @@ void MMU::protection_error_interrupt_handler() {
 
 void MMU::chunk_fault_interrupt_handler() {
     HW_MMU::LogicalAddress logicalAddressMissed = HW_Machine::MMU()->readRegister(1);
+    OperatingSystem::Memory_Manager()->handlePageFault(logicalAddressMissed);
+}
+
+void MMU::updatePageTable(int pageNumber, PhysicalAddress baseAddress, int M, int R, Page page) {
+    int pageFrame = (baseAddress & HW_MMU_Paging::mask_Frame);
+    pageTable->setPageEntry(pageNumber, pageFrame, M, R, page);
 }

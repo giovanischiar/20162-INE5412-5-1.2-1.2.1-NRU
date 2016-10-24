@@ -39,6 +39,7 @@
       <itemPath>ModuleInvoke_PulseExecution.h</itemPath>
       <itemPath>OperatingSystem.h</itemPath>
       <itemPath>Page.h</itemPath>
+      <itemPath>PageTable.h</itemPath>
       <itemPath>ProblemSolving20162ModelBuilder.h</itemPath>
       <itemPath>ProblemTester.h</itemPath>
       <itemPath>Simul_Debug.h</itemPath>
@@ -91,6 +92,7 @@
       <itemPath>ModuleInvoke_PulseExecution.cpp</itemPath>
       <itemPath>OperatingSystem.cpp</itemPath>
       <itemPath>Page.cpp</itemPath>
+      <itemPath>PageTable.cpp</itemPath>
       <itemPath>ProblemSolving20162ModelBuilder.cpp</itemPath>
       <itemPath>ProblemTester.cpp</itemPath>
       <itemPath>Simul_Debug.cpp</itemPath>
@@ -113,6 +115,14 @@
                    displayName="Arquivos de Teste"
                    projectFiles="false"
                    kind="TEST_LOGICAL_FOLDER">
+      <logicalFolder name="f2"
+                     displayName="gerenciamento de memória"
+                     projectFiles="true"
+                     kind="TEST">
+        <itemPath>tests/MemoryManagerTest.cpp</itemPath>
+        <itemPath>tests/MemoryManagerTest.h</itemPath>
+        <itemPath>tests/MemoryManagerTestRunner.cpp</itemPath>
+      </logicalFolder>
       <logicalFolder name="f1"
                      displayName="swap area opreations"
                      projectFiles="true"
@@ -285,6 +295,10 @@
       </item>
       <item path="Page.h" ex="false" tool="3" flavor2="0">
       </item>
+      <item path="PageTable.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="PageTable.h" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="ProblemSolving20162ModelBuilder.cpp"
             ex="false"
             tool="1"
@@ -352,7 +366,27 @@
           </linkerLibItems>
         </linkerTool>
       </folder>
+      <folder path="TestFiles/f2">
+        <cTool>
+          <commandLine>`cppunit-config --cflags`</commandLine>
+        </cTool>
+        <ccTool>
+          <commandLine>`cppunit-config --cflags`</commandLine>
+        </ccTool>
+        <linkerTool>
+          <output>${TESTDIR}/TestFiles/f2</output>
+          <linkerLibItems>
+            <linkerOptionItem>`cppunit-config --libs`</linkerOptionItem>
+          </linkerLibItems>
+        </linkerTool>
+      </folder>
       <item path="main.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="tests/MemoryManagerTest.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="tests/MemoryManagerTest.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="tests/MemoryManagerTestRunner.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="tests/VirtualMemorySwapTest.cpp" ex="false" tool="1" flavor2="0">
       </item>
@@ -521,6 +555,10 @@
       </item>
       <item path="Page.h" ex="false" tool="3" flavor2="0">
       </item>
+      <item path="PageTable.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="PageTable.h" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="ProblemSolving20162ModelBuilder.cpp"
             ex="false"
             tool="1"
@@ -588,7 +626,27 @@
           </linkerLibItems>
         </linkerTool>
       </folder>
+      <folder path="TestFiles/f2">
+        <cTool>
+          <commandLine>`cppunit-config --cflags`</commandLine>
+        </cTool>
+        <ccTool>
+          <commandLine>`cppunit-config --cflags`</commandLine>
+        </ccTool>
+        <linkerTool>
+          <output>${TESTDIR}/TestFiles/f2</output>
+          <linkerLibItems>
+            <linkerOptionItem>`cppunit-config --libs`</linkerOptionItem>
+          </linkerLibItems>
+        </linkerTool>
+      </folder>
       <item path="main.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="tests/MemoryManagerTest.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="tests/MemoryManagerTest.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="tests/MemoryManagerTestRunner.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="tests/VirtualMemorySwapTest.cpp" ex="false" tool="1" flavor2="0">
       </item>

@@ -15,7 +15,10 @@
 
 #include "VirtualMemorySwap.h"
 #include "Traits.h"
+#include "Page.h"
 #include <string.h>
+
+const unsigned int SWAPAREASIZE = (Traits<VirtualMemorySwap>::swapAreaSize/sizeof(Information));
 
 VirtualMemorySwap::VirtualMemorySwap() {
     swapArea = new Information[SWAPAREASIZE];

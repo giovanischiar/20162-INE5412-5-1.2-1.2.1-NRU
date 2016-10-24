@@ -14,12 +14,14 @@
 #ifndef VIRTUALMEMORYSWAP_H
 #define VIRTUALMEMORYSWAP_H
 
-#include "Traits.h"
+#include <vector>
+#include <list>
 #include "DataMemoryChunk.h"
-#include "Page.h"
 
 #define List std::list
-#define SWAPAREASIZE (Traits<VirtualMemorySwap>::swapAreaSize/sizeof(Information))
+extern const unsigned int SWAPAREASIZE;
+
+class Page;
 
 class VirtualMemorySwap {
 public:

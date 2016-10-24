@@ -9,9 +9,21 @@
 #ifndef MEMORYMANAGER_H
 #define	MEMORYMANAGER_H
 
+#include <limits.h> 
 #include "Abstr_MemoryChunk.h"
+#include "VirtualMemorySwap.h"
 
 //enum MemoryAllocationAlgorithm {FirstFit, NextFit, BestFit, WorstFit};
+
+#define NO_FREE_ADDRESS (UINT_MAX)
+
+enum PartitionType {PROCESS, FREE};
+
+typedef struct {
+    PartitionType type;
+    PhysicalAddress baseAddress;
+    unsigned int pageCount;
+} MemoryPartition;
 
 class MemoryManager {
     friend class ProblemTester;
@@ -29,9 +41,13 @@ private: // do not change
     std::list<MemoryChunk*>* _chunks;
     
 private: // private attributes and methods
-    // INSERT YOUR CODE HERE
-    // ...
+    List<MemoryPartition> partitions;
+    VirtualMemorySwap virtualSwapArea;
 
+public:
+    PhysicalAddress getFreeAddress();
+    void handlePageFault(LogicalAddress missedAddress);
+    const std::list<MemoryPartition>& getPartitions() const;
 };
 
 #endif	/* MEMORYMANAGER_H */

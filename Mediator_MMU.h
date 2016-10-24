@@ -15,6 +15,7 @@
 #define MMU_H
 
 #include "HW_MMU.h"
+#include "PageTable.h"
 
 
 class MMU {
@@ -24,14 +25,16 @@ public:
     typedef HW_MMU::PhysicalAddress PhysicalAddress; 
 public:
     MMU(unsigned int instance);
-    MMU(const MMU& orig);
     virtual ~MMU();
 public:
+    void createPageTable(int pageCount);
+    void updatePageTable(int pageNumber, PhysicalAddress baseAddress, int M, int R, Page page);
     // INSERT YOUR CODE HERE
     // (Methods to set MMU registers)
     // ...
 private:
     unsigned int _instance;
+    PageTable* pageTable;
     
 private:
     static void protection_error_interrupt_handler();

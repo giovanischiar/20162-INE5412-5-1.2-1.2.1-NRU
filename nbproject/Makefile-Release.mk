@@ -70,6 +70,7 @@ OBJECTFILES= \
 	${OBJECTDIR}/ModuleInvoke_PulseExecution.o \
 	${OBJECTDIR}/OperatingSystem.o \
 	${OBJECTDIR}/Page.o \
+	${OBJECTDIR}/PageTable.o \
 	${OBJECTDIR}/ProblemSolving20162ModelBuilder.o \
 	${OBJECTDIR}/ProblemTester.o \
 	${OBJECTDIR}/Simul_Debug.o \
@@ -89,10 +90,13 @@ TESTDIR=${CND_BUILDDIR}/${CND_CONF}/${CND_PLATFORM}/tests
 
 # Test Files
 TESTFILES= \
+	${TESTDIR}/TestFiles/f2 \
 	${TESTDIR}/TestFiles/f1
 
 # Test Object Files
 TESTOBJECTFILES= \
+	${TESTDIR}/tests/MemoryManagerTest.o \
+	${TESTDIR}/tests/MemoryManagerTestRunner.o \
 	${TESTDIR}/tests/VirtualMemorySwapTest.o \
 	${TESTDIR}/tests/newtestrunner.o
 
@@ -295,6 +299,11 @@ ${OBJECTDIR}/Page.o: Page.cpp
 	${RM} "$@.d"
 	$(COMPILE.cc) -O2 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/Page.o Page.cpp
 
+${OBJECTDIR}/PageTable.o: PageTable.cpp
+	${MKDIR} -p ${OBJECTDIR}
+	${RM} "$@.d"
+	$(COMPILE.cc) -O2 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/PageTable.o PageTable.cpp
+
 ${OBJECTDIR}/ProblemSolving20162ModelBuilder.o: ProblemSolving20162ModelBuilder.cpp
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
@@ -367,9 +376,25 @@ ${OBJECTDIR}/main.o: main.cpp
 .build-tests-conf: .build-tests-subprojects .build-conf ${TESTFILES}
 .build-tests-subprojects:
 
+${TESTDIR}/TestFiles/f2: ${TESTDIR}/tests/MemoryManagerTest.o ${TESTDIR}/tests/MemoryManagerTestRunner.o ${OBJECTFILES:%.o=%_nomain.o}
+	${MKDIR} -p ${TESTDIR}/TestFiles
+	${LINK.cc} -o ${TESTDIR}/TestFiles/f2 $^ ${LDLIBSOPTIONS}   `cppunit-config --libs`   
+
 ${TESTDIR}/TestFiles/f1: ${TESTDIR}/tests/VirtualMemorySwapTest.o ${TESTDIR}/tests/newtestrunner.o ${OBJECTFILES:%.o=%_nomain.o}
 	${MKDIR} -p ${TESTDIR}/TestFiles
 	${LINK.cc} -o ${TESTDIR}/TestFiles/f1 $^ ${LDLIBSOPTIONS}   `cppunit-config --libs`   
+
+
+${TESTDIR}/tests/MemoryManagerTest.o: tests/MemoryManagerTest.cpp 
+	${MKDIR} -p ${TESTDIR}/tests
+	${RM} "$@.d"
+	$(COMPILE.cc) -O2 `cppunit-config --cflags` -MMD -MP -MF "$@.d" -o ${TESTDIR}/tests/MemoryManagerTest.o tests/MemoryManagerTest.cpp
+
+
+${TESTDIR}/tests/MemoryManagerTestRunner.o: tests/MemoryManagerTestRunner.cpp 
+	${MKDIR} -p ${TESTDIR}/tests
+	${RM} "$@.d"
+	$(COMPILE.cc) -O2 `cppunit-config --cflags` -MMD -MP -MF "$@.d" -o ${TESTDIR}/tests/MemoryManagerTestRunner.o tests/MemoryManagerTestRunner.cpp
 
 
 ${TESTDIR}/tests/VirtualMemorySwapTest.o: tests/VirtualMemorySwapTest.cpp 
@@ -839,6 +864,19 @@ ${OBJECTDIR}/Page_nomain.o: ${OBJECTDIR}/Page.o Page.cpp
 	    ${CP} ${OBJECTDIR}/Page.o ${OBJECTDIR}/Page_nomain.o;\
 	fi
 
+${OBJECTDIR}/PageTable_nomain.o: ${OBJECTDIR}/PageTable.o PageTable.cpp 
+	${MKDIR} -p ${OBJECTDIR}
+	@NMOUTPUT=`${NM} ${OBJECTDIR}/PageTable.o`; \
+	if (echo "$$NMOUTPUT" | ${GREP} '|main$$') || \
+	   (echo "$$NMOUTPUT" | ${GREP} 'T main$$') || \
+	   (echo "$$NMOUTPUT" | ${GREP} 'T _main$$'); \
+	then  \
+	    ${RM} "$@.d";\
+	    $(COMPILE.cc) -O2 -Dmain=__nomain -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/PageTable_nomain.o PageTable.cpp;\
+	else  \
+	    ${CP} ${OBJECTDIR}/PageTable.o ${OBJECTDIR}/PageTable_nomain.o;\
+	fi
+
 ${OBJECTDIR}/ProblemSolving20162ModelBuilder_nomain.o: ${OBJECTDIR}/ProblemSolving20162ModelBuilder.o ProblemSolving20162ModelBuilder.cpp 
 	${MKDIR} -p ${OBJECTDIR}
 	@NMOUTPUT=`${NM} ${OBJECTDIR}/ProblemSolving20162ModelBuilder.o`; \
@@ -1012,6 +1050,7 @@ ${OBJECTDIR}/main_nomain.o: ${OBJECTDIR}/main.o main.cpp
 .test-conf:
 	@if [ "${TEST}" = "" ]; \
 	then  \
+	    ${TESTDIR}/TestFiles/f2 || true; \
 	    ${TESTDIR}/TestFiles/f1 || true; \
 	else  \
 	    ./${TEST} || true; \
