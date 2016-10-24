@@ -32,6 +32,7 @@ HW_MMU_Paging::HW_MMU_Paging() {
                         (0x0000 << HW_MMU_Paging::off_Frame);  // page is in frame 0
     HW_Machine::RAM()->write(addr, data); // load the page descriptor into RAM
     // page table (with only one page descriptor) loaded in memory!
+    
  }
 
 HW_MMU_Paging::HW_MMU_Paging(const HW_MMU_Paging& orig) {

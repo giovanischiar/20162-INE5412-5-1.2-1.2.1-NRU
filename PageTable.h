@@ -23,8 +23,8 @@ typedef HW_MMU_Paging::PageEntry PageEntry;
 class PageTable {
 public:
     PageTable(PhysicalAddress baseAddress, int pageCount);
-    PageEntry getPageFrame(int pageNumber);
-    void setPageEntry(int pageNumber, int pageFrame, int M, int R, Page page);
+    Information getPageFrame(int pageNumber);
+    void setPageEntry(int pageNumber, int pageFrame, int M, int R, const Page& page);
     PageTable(const PageTable& orig);
     virtual ~PageTable();
 private:

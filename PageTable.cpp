@@ -31,12 +31,12 @@ PageTable::PageTable(PhysicalAddress baseAddress, int pageCount) {
      
 }
 
-PageEntry PageTable::getPageFrame(int pageNumber) {
-    PhysicalAddress pageEntryAddress = baseAddress + pageNumber;
+Information PageTable::getPageFrame(int pageNumber) {
+    PhysicalAddress pageEntryAddress = baseAddress - pageNumber;
     return HW_Machine::RAM()->read(pageEntryAddress);
 }
 
-void PageTable::setPageEntry(int pageNumber, int pageFrame, int M, int R, Page page) {
+void PageTable::setPageEntry(int pageNumber, int pageFrame, int M, int R, const Page& page) {
     PageEntry pageEntry = (1 << HW_MMU_Paging::off_vality) +
                           (page.isIsReadable() << HW_MMU_Paging::off_read) +
                           (page.isIsWritable() << HW_MMU_Paging::off_write) +
@@ -44,7 +44,7 @@ void PageTable::setPageEntry(int pageNumber, int pageFrame, int M, int R, Page p
                           (M << HW_MMU_Paging::off_M) + 
                           (R << HW_MMU_Paging::off_R) +
                           (pageFrame << HW_MMU_Paging::off_Frame);
-    HW_Machine::RAM()->write(baseAddress + pageNumber, pageEntry);
+    HW_Machine::RAM()->write(baseAddress - pageNumber, pageEntry);
 }
 
 PageTable::PageTable(const PageTable& orig) {

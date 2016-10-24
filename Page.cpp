@@ -24,6 +24,11 @@ Page::Page(LogicalAddress base, Information (& data)[PAGESIZE], bool isReadable,
 }
 
 Page::Page(const Page& orig) {
+    this->base = orig.getBase();
+    std::copy(orig.getData(), orig.getData()+PAGESIZE, this->data);
+    this->isExecutable = orig.isIsExecutable();
+    this->isReadable = orig.isIsReadable();
+    this->isWritable = orig.isIsWritable();
 }
 
 Page::~Page() {
@@ -41,9 +46,13 @@ bool Page::isIsReadable() const {
     return isReadable;
 }
 
-Information const* Page::getData() const{return data;}
+Information* Page::getData() const{return data;}
 
 Information Page::getValue(unsigned int index) const {   
     std::cout << "get Page.data[" << index-base << "] = " << data[index-base] << std::endl;
     return data[index-base];
+}
+
+LogicalAddress Page::getBase() const {
+    return base;
 }
