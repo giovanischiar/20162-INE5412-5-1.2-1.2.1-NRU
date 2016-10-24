@@ -19,7 +19,10 @@
 class MemoryManagerTest : public CPPUNIT_NS::TestFixture {
     CPPUNIT_TEST_SUITE(MemoryManagerTest);
 
-    CPPUNIT_TEST(testGetFreeAddress);
+    CPPUNIT_TEST(testGetFreeAddressWithOneMemoryPartitionRequest);
+    CPPUNIT_TEST(testGetFreeAddressWithLotsOfMemoryPartitionRequest);
+    CPPUNIT_TEST(testGetFreeAddressWithFullMemoryPartitionRequest);
+    CPPUNIT_TEST(testGetFreeAddressWithNoFreeAddressMemoryPartitionRequest);
 
     CPPUNIT_TEST_SUITE_END();
 
@@ -30,8 +33,10 @@ public:
     void tearDown();
 
 private:
-    void testGetFreeAddress();
-
+    void testGetFreeAddressWithOneMemoryPartitionRequest();
+    void testGetFreeAddressWithLotsOfMemoryPartitionRequest();
+    void testGetFreeAddressWithFullMemoryPartitionRequest();
+    void testGetFreeAddressWithNoFreeAddressMemoryPartitionRequest();
 };
 
 #endif /* MEMORYMANAGERTEST_H */

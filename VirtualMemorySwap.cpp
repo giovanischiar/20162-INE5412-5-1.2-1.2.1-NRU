@@ -72,6 +72,13 @@ VirtualMemorySwap::VirtualMemorySwap(const VirtualMemorySwap& orig) {
 }
 
 VirtualMemorySwap::~VirtualMemorySwap() {
+    if (swapArea) {
+        delete swapArea;
+    }
+    for (std::vector<MemoryChunk*>::iterator it = chunks.begin(); it != chunks.end(); it++) {
+        delete *it;
+    }
+    chunks.clear();
 }
 
 std::vector<MemoryChunk*> VirtualMemorySwap::getChunks() const {

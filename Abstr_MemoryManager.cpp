@@ -83,8 +83,8 @@ void MemoryManager::showMemory() {
 void MemoryManager::handlePageFault(LogicalAddress missedAddress) {
     Page missedPage = virtualSwapArea.getPage(missedAddress);
     PhysicalAddress baseAddress = getFreeAddress();
-    if(baseAddress == NO_FREE_ADDRESS) {
-       //TODO: NRU;
+    if (baseAddress == NO_FREE_ADDRESS) {
+        //TODO: NRU;
     }
     for (int i = 0; i < PAGESIZE; i++) {
         HW_Machine::RAM()->write(baseAddress + i, missedPage.getValue(i));
@@ -100,11 +100,12 @@ PhysicalAddress MemoryManager::getFreeAddress() {
     if (partitions.size() == 1 && partitions.begin()->type == PROCESS) {
         return NO_FREE_ADDRESS;
     }
-    
+
     for (List<MemoryPartition>::iterator freePartition = partitions.begin(); freePartition != partitions.end(); ++freePartition) {
         if (freePartition->type == FREE) {
             PhysicalAddress freeAddress;
-            if (freePartition == partitions.begin() || freePartition == partitions.end()) {
+            List<MemoryPartition>::iterator last = --partitions.end();
+            if (freePartition == partitions.begin()) {
                 MemoryPartition newPartition;
                 newPartition.type = PROCESS;
                 newPartition.baseAddress = freePartition->baseAddress;
@@ -116,28 +117,40 @@ PhysicalAddress MemoryManager::getFreeAddress() {
                 if (freePartition->pageCount == 0) {
                     partitions.erase(freePartition);
                 }
-                
+
                 freeAddress = newPartition.baseAddress;
-            } else {
-                List<MemoryPartition>::iterator previousPartition = freePartition--;
+            } else if (freePartition == last) {
+                List<MemoryPartition>::iterator previousPartition = --freePartition;
                 freePartition++;
                 previousPartition->pageCount++;
 
                 freePartition->pageCount--;
                 freePartition->baseAddress += PAGESIZE;
                 if (freePartition->pageCount == 0) {
-                    List<MemoryPartition>::iterator nextPartition = freePartition++;
+                    partitions.erase(freePartition);
+                }
+
+                freeAddress = previousPartition->baseAddress + (previousPartition->pageCount - 1) * PAGESIZE;
+            } else {
+                List<MemoryPartition>::iterator previousPartition = --freePartition;
+                freePartition++;
+                previousPartition->pageCount++;
+
+                freePartition->pageCount--;
+                freePartition->baseAddress += PAGESIZE;
+                if (freePartition->pageCount == 0) {
+                    List<MemoryPartition>::iterator nextPartition = ++freePartition;
                     freePartition--;
                     previousPartition->pageCount += nextPartition->pageCount;
                     partitions.erase(freePartition);
                     partitions.erase(nextPartition);
                 }
-                
-                freeAddress = previousPartition->baseAddress + (previousPartition->pageCount-1)*PAGESIZE;
+
+                freeAddress = previousPartition->baseAddress + (previousPartition->pageCount - 1) * PAGESIZE;
             }
             return freeAddress;
         }
     }
-    
+
     return NO_FREE_ADDRESS;
 }
