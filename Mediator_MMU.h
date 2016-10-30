@@ -16,6 +16,7 @@
 
 #include "HW_MMU.h"
 #include "PageTable.h"
+#include "PageReplacementAlgorithm.h"
 
 #define NO_ADDRESS (UINT_MAX)
 
@@ -33,6 +34,8 @@ public:
     void setModified(int pageNumber);
     void setReferenced(int pageNumber, int R);
     Information getPageFrame(int pageNumber);
+    void cleanReferenceBits();
+    PageToBeReplaced findPageToBeReplaced();
     // INSERT YOUR CODE HERE
     // (Methods to set MMU registers)
     // ...

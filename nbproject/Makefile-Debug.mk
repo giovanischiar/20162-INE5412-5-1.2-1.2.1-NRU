@@ -68,6 +68,7 @@ OBJECTFILES= \
 	${OBJECTDIR}/ModuleDispose.o \
 	${OBJECTDIR}/ModuleInvoke_HardwareEvent.o \
 	${OBJECTDIR}/ModuleInvoke_PulseExecution.o \
+	${OBJECTDIR}/NRU.o \
 	${OBJECTDIR}/OperatingSystem.o \
 	${OBJECTDIR}/Page.o \
 	${OBJECTDIR}/PageTable.o \
@@ -291,6 +292,11 @@ ${OBJECTDIR}/ModuleInvoke_PulseExecution.o: ModuleInvoke_PulseExecution.cpp
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
 	$(COMPILE.cc) -g -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/ModuleInvoke_PulseExecution.o ModuleInvoke_PulseExecution.cpp
+
+${OBJECTDIR}/NRU.o: NRU.cpp
+	${MKDIR} -p ${OBJECTDIR}
+	${RM} "$@.d"
+	$(COMPILE.cc) -g -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/NRU.o NRU.cpp
 
 ${OBJECTDIR}/OperatingSystem.o: OperatingSystem.cpp
 	${MKDIR} -p ${OBJECTDIR}
@@ -855,6 +861,19 @@ ${OBJECTDIR}/ModuleInvoke_PulseExecution_nomain.o: ${OBJECTDIR}/ModuleInvoke_Pul
 	    $(COMPILE.cc) -g -Dmain=__nomain -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/ModuleInvoke_PulseExecution_nomain.o ModuleInvoke_PulseExecution.cpp;\
 	else  \
 	    ${CP} ${OBJECTDIR}/ModuleInvoke_PulseExecution.o ${OBJECTDIR}/ModuleInvoke_PulseExecution_nomain.o;\
+	fi
+
+${OBJECTDIR}/NRU_nomain.o: ${OBJECTDIR}/NRU.o NRU.cpp 
+	${MKDIR} -p ${OBJECTDIR}
+	@NMOUTPUT=`${NM} ${OBJECTDIR}/NRU.o`; \
+	if (echo "$$NMOUTPUT" | ${GREP} '|main$$') || \
+	   (echo "$$NMOUTPUT" | ${GREP} 'T main$$') || \
+	   (echo "$$NMOUTPUT" | ${GREP} 'T _main$$'); \
+	then  \
+	    ${RM} "$@.d";\
+	    $(COMPILE.cc) -g -Dmain=__nomain -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/NRU_nomain.o NRU.cpp;\
+	else  \
+	    ${CP} ${OBJECTDIR}/NRU.o ${OBJECTDIR}/NRU_nomain.o;\
 	fi
 
 ${OBJECTDIR}/OperatingSystem_nomain.o: ${OBJECTDIR}/OperatingSystem.o OperatingSystem.cpp 

@@ -30,6 +30,7 @@ public:
     void fillSwap(List<DataMemoryChunk> chunks);
     VirtualMemorySwap(const VirtualMemorySwap& orig);
     Page getPage(LogicalAddress address);
+    void writePage(int pageNumber, Information pageData[]);
     virtual ~VirtualMemorySwap();
     std::vector<MemoryChunk*> getChunks() const;
     Information* getSwapArea() const;

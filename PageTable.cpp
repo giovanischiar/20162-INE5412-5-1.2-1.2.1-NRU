@@ -16,6 +16,7 @@
 #include "HW_Machine.h"
 
 PageTable::PageTable(PhysicalAddress baseAddress, int pageCount) {
+    this->pageCount = pageCount;
     this->baseAddress = baseAddress;
     for (int i = 0; i < pageCount; i++) {
         Information pageEntry;
@@ -28,7 +29,6 @@ PageTable::PageTable(PhysicalAddress baseAddress, int pageCount) {
                     (0x0000 << HW_MMU_Paging::off_Frame); // page is in frame 0
         HW_Machine::RAM()->write(baseAddress-i, pageEntry);
     }
-     
 }
 
 Information PageTable::getPageFrame(int pageNumber) {
@@ -55,6 +55,10 @@ void PageTable::setM(int pageNumber) {
 void PageTable::setR(int pageNumber, int R) {
     Information newPageEntry = (R << HW_MMU_Paging::off_R) | getPageFrame(pageNumber);
     HW_Machine::RAM()->write(baseAddress - pageNumber, newPageEntry);    
+}
+
+int PageTable::getPageCount() {
+    return pageCount;
 }
 
 PageTable::PageTable(const PageTable& orig) {

@@ -16,12 +16,16 @@
 
 #include <iostream>
 
+#define OS_PARTITION_SIZE (1)
+#define PAGETABLE_PARTITION (1)
+
 MemoryManager::MemoryManager() {
     _chunks = new std::list<MemoryChunk*>();
     MemoryPartition partition;
     partition.type = FREE;
-    partition.baseAddress = 0;
-    partition.pageCount = Traits<MemoryManager>::physicalMemorySize / Traits<MemoryManager>::pageSize;
+    partition.baseAddress = PAGESIZE;
+    int totalPagesInMemory = (Traits<HW_MMU>::RAMsize / Traits<MemoryManager>::pageSize);
+    partition.pageCount = totalPagesInMemory - OS_PARTITION_SIZE - PAGETABLE_PARTITION;
     partitions.push_back(partition);
 }
 
@@ -84,7 +88,15 @@ void MemoryManager::handlePageFault(LogicalAddress missedAddress) {
     Page missedPage = virtualSwapArea.getPage(missedAddress);
     PhysicalAddress baseAddress = getFreeAddress();
     if (baseAddress == NO_FREE_ADDRESS) {
-        //TODO: NRU;
+        PageToBeReplaced pageToBeReplaced = OperatingSystem::MMU_Mediator()->findPageToBeReplaced();
+        baseAddress = pageToBeReplaced.basePhysicalAddress;
+        if (pageToBeReplaced.modified) {
+            Information pageData[PAGESIZE];
+            for (int i = 0; i < PAGESIZE; i++) {
+                pageData[i] = HW_Machine::RAM()->read(pageToBeReplaced.basePhysicalAddress + i);
+            }
+            virtualSwapArea.writePage(pageToBeReplaced.pageNumber, pageData);
+        }
     }
     for (int i = 0; i < PAGESIZE; i++) {
         HW_Machine::RAM()->write(baseAddress + i, missedPage.getValue(i));
@@ -154,3 +166,4 @@ PhysicalAddress MemoryManager::getFreeAddress() {
 
     return NO_FREE_ADDRESS;
 }
+

@@ -52,7 +52,9 @@ void OperatingSystem::ExecuteTestCode() {
     Module* module = simulator->getModule();
     int executionStep = std::stoi(entity->getAttribute("ExecutionStep")->getValue());
     double timeNow = simulator->getTnow();
-
+    
+    MMU_Mediator()->cleanReferenceBits();
+    
     // INSERT HERE YOUR CODE
     // You can write a test code that will be executed and will invoke system calls or whenever you want
     // Follow the examples...

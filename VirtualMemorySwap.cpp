@@ -18,54 +18,63 @@
 #include "Page.h"
 #include <string.h>
 
-const unsigned int SWAPAREASIZE = (Traits<VirtualMemorySwap>::swapAreaSize/sizeof(Information));
+const unsigned int SWAPAREASIZE = (Traits<MemoryManager>::swapAreaSize / sizeof (Information));
 
 VirtualMemorySwap::VirtualMemorySwap() {
     swapArea = new Information[SWAPAREASIZE];
 }
 
 void VirtualMemorySwap::fillSwap(List<DataMemoryChunk> chunks) {
-    memset(swapArea, 0, Traits<VirtualMemorySwap>::swapAreaSize);
+    memset(swapArea, 0, Traits<MemoryManager>::swapAreaSize);
     std::list<DataMemoryChunk>::iterator it;
     int j = 0;
-    for(it = chunks.begin(); it != chunks.end(); it++) {
+    for (it = chunks.begin(); it != chunks.end(); it++) {
         int size = it->getSize();
         Information* chunkArray = it->getData();
         MemoryChunk* chunk = new MemoryChunk(it->getBeginLogicalAddress(),
-                                             it->getSize(), 
-                                             it->isIsExecutable(),
-                                             it->isIsReadable(),
-                                             it->isIsWritable());
+                it->getSize(),
+                it->isIsExecutable(),
+                it->isIsReadable(),
+                it->isIsWritable());
         this->chunks.push_back(chunk);
-        for(int i = 0; i < size; i++) {
-            swapArea[i+j] = chunkArray[i];
+        for (int i = 0; i < size; i++) {
+            swapArea[i + j] = chunkArray[i];
         }
         j += size;
     }
 }
 
 Page VirtualMemorySwap::getPage(LogicalAddress address) {
-    int pageNumber = (int)(address/PAGESIZE);
+    int pageNumber = (int) (address / PAGESIZE);
     int baseAddress = pageNumber * PAGESIZE;
     Information pageData[PAGESIZE];
     int j = 0;
-    for(int i = baseAddress; i < baseAddress+PAGESIZE; i++) {
+    for (int i = baseAddress; i < baseAddress + PAGESIZE; i++) {
         pageData[j] = swapArea[i];
         j++;
     }
-    
+
     bool isExecutable, isReadable, isWritable;
     for (auto it = chunks.begin(); it != chunks.end(); ++it) {
         MemoryChunk* chunk = *it;
-        if (chunk->getBeginLogicalAddress() <= baseAddress && baseAddress < chunk->getBeginLogicalAddress()+chunk->getSize()) {
+        if (chunk->getBeginLogicalAddress() <= baseAddress && baseAddress < chunk->getBeginLogicalAddress() + chunk->getSize()) {
             isExecutable = chunk->isIsExecutable();
             isReadable = chunk->isIsReadable();
             isWritable = chunk->isIsWritable();
             break;
         }
     }
-    
+
     return Page(baseAddress, pageData, isReadable, isWritable, isExecutable);
+}
+
+void VirtualMemorySwap::writePage(int pageNumber, Information pageData[]) {
+    int baseAddress = pageNumber * PAGESIZE;
+    int j = 0;
+    for (int i = baseAddress; i < baseAddress + PAGESIZE; i++) {
+        swapArea[i] = pageData[j];
+        j++;
+    }
 }
 
 VirtualMemorySwap::VirtualMemorySwap(const VirtualMemorySwap& orig) {
@@ -85,7 +94,7 @@ std::vector<MemoryChunk*> VirtualMemorySwap::getChunks() const {
     return chunks;
 }
 
-Information* VirtualMemorySwap::getSwapArea() const{
+Information* VirtualMemorySwap::getSwapArea() const {
     dumpSwapArea();
     return swapArea;
 }

@@ -46,7 +46,9 @@ bool Page::isIsReadable() const {
     return isReadable;
 }
 
-Information* Page::getData() const{return data;}
+Information const * Page::getData() const {
+    return data;
+}
 
 Information Page::getValue(unsigned int index) const {   
     std::cout << "get Page.data[" << index-base << "] = " << data[index-base] << std::endl;

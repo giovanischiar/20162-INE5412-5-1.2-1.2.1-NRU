@@ -28,8 +28,10 @@ public:
     void setM(int pageNumber);
     void setR(int pageNumber, int R);
     virtual ~PageTable();
+    int getPageCount();
 private:
     PhysicalAddress baseAddress;
+    int pageCount;
 
 };
 

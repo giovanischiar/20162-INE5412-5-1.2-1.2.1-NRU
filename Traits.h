@@ -110,9 +110,6 @@ template<> struct Traits<MemoryManager> {
     static constexpr unsigned int pageSize = 32; // bytes
     static constexpr AllocationAlgorithm allocationAlgorithm = AllocationAlgorithm::BestFit;
     static constexpr ReplacementAlgorithm replacementAlgorithm = ReplacementAlgorithm::FIFO;
-};
-
-template<> struct Traits<VirtualMemorySwap> {
     static constexpr unsigned int swapAreaSize = 512; // bytes
 };
 

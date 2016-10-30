@@ -37,8 +37,10 @@
       <itemPath>ModuleDispose.h</itemPath>
       <itemPath>ModuleInvoke_HardwareEvent.h</itemPath>
       <itemPath>ModuleInvoke_PulseExecution.h</itemPath>
+      <itemPath>NRU.h</itemPath>
       <itemPath>OperatingSystem.h</itemPath>
       <itemPath>Page.h</itemPath>
+      <itemPath>PageReplacementAlgorithm.h</itemPath>
       <itemPath>PageTable.h</itemPath>
       <itemPath>ProblemSolving20162ModelBuilder.h</itemPath>
       <itemPath>ProblemTester.h</itemPath>
@@ -90,6 +92,7 @@
       <itemPath>ModuleDispose.cpp</itemPath>
       <itemPath>ModuleInvoke_HardwareEvent.cpp</itemPath>
       <itemPath>ModuleInvoke_PulseExecution.cpp</itemPath>
+      <itemPath>NRU.cpp</itemPath>
       <itemPath>OperatingSystem.cpp</itemPath>
       <itemPath>Page.cpp</itemPath>
       <itemPath>PageTable.cpp</itemPath>
@@ -295,6 +298,10 @@
       </item>
       <item path="ModuleInvoke_PulseExecution.h" ex="false" tool="3" flavor2="0">
       </item>
+      <item path="NRU.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="NRU.h" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="OperatingSystem.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="OperatingSystem.h" ex="false" tool="3" flavor2="0">
@@ -302,6 +309,8 @@
       <item path="Page.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="Page.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="PageReplacementAlgorithm.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="PageTable.cpp" ex="false" tool="1" flavor2="0">
       </item>
@@ -575,6 +584,10 @@
       </item>
       <item path="ModuleInvoke_PulseExecution.h" ex="false" tool="3" flavor2="0">
       </item>
+      <item path="NRU.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="NRU.h" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="OperatingSystem.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="OperatingSystem.h" ex="false" tool="3" flavor2="0">
@@ -582,6 +595,8 @@
       <item path="Page.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="Page.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="PageReplacementAlgorithm.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="PageTable.cpp" ex="false" tool="1" flavor2="0">
       </item>

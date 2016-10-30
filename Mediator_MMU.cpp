@@ -16,6 +16,7 @@
 #include "HW_MMU.h"
 #include "OperatingSystem.h"
 #include "Traits.h"
+#include "NRU.h"
 
 MMU::MMU(unsigned int instance) {
     _instance = instance;
@@ -28,7 +29,7 @@ MMU::MMU(unsigned int instance) {
     Information pageData[PAGESIZE];
     Page page = Page(0, pageData, true, true, true);
     pageTable->setPageEntry(0, 0x0000, 0x0, 0x0, page);
-    
+
     HW_Machine::MMU()->writeRegister(1, NO_ADDRESS);
 }
 
@@ -73,4 +74,17 @@ void MMU::setReferenced(int pageNumber, int R) {
 
 Information MMU::getPageFrame(int pageNumber) {
     return pageTable->getPageFrame(pageNumber);
+}
+
+void MMU::cleanReferenceBits() {
+    //queremos ignorar a entrada da página do "SO"
+    for (int i = 1; i < (Traits<HW_MMU>::RAMsize / Traits<MemoryManager>::pageSize); i++) {
+        setReferenced(i, 0x0);
+    }
+}
+
+PageToBeReplaced MMU::findPageToBeReplaced() {
+    PageReplacementAlgorithm* nru = new NRU();
+    PageToBeReplaced pageToBeReplaced = nru->findPageToBeReplaced(pageTable);
+    return pageToBeReplaced;
 }

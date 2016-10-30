@@ -28,7 +28,7 @@ public:
     bool isIsExecutable() const;
     bool isIsWritable() const;
     bool isIsReadable() const;
-    Information* getData() const;
+    Information const * getData() const;
     Information getValue(unsigned int index) const;
     LogicalAddress getBase() const;
 private:
