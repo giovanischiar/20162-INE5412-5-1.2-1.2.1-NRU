@@ -23,18 +23,18 @@ HW_MMU_Paging::HW_MMU_Paging() {
     // INSERT YOUR CODE HERE
     // ...
     
-    // It will create basic Page Table at top of RAM defining one page in the bottom of the RAM
-    // This code should be somewhere else (when loading an Application), but it is here for convenience
-    Information addr = Traits<HW_MMU>::RAMsize-1; // base of Page Table (PT occupies one address)
-    this->_PTBR = addr;  // by default, PTBR points to the new Page Table
-    // fill the page table with one page descriptor 
-    Information data =  (1 << HW_MMU_Paging::off_vality) +  // page is in memory
-                        (1 << HW_MMU_Paging::off_read) + // page can be read
-                        (1 << HW_MMU_Paging::off_write) + // page can be write
-                        (1 << HW_MMU_Paging::off_exec) +  // page can be execute
-                        (0x0000 << HW_MMU_Paging::off_Frame);  // page is in frame 0
-    HW_Machine::RAM()->write(addr, data); // load the page descriptor into RAM
-    // page table (with only one page descriptor) loaded in memory!
+//    // It will create basic Page Table at top of RAM defining one page in the bottom of the RAM
+//    // This code should be somewhere else (when loading an Application), but it is here for convenience
+//    Information addr = Traits<HW_MMU>::RAMsize-1; // base of Page Table (PT occupies one address)
+//    this->_PTBR = addr;  // by default, PTBR points to the new Page Table
+//    // fill the page table with one page descriptor 
+//    Information data =  (1 << HW_MMU_Paging::off_vality) +  // page is in memory
+//                        (1 << HW_MMU_Paging::off_read) + // page can be read
+//                        (1 << HW_MMU_Paging::off_write) + // page can be write
+//                        (1 << HW_MMU_Paging::off_exec) +  // page can be execute
+//                        (0x0000 << HW_MMU_Paging::off_Frame);  // page is in frame 0
+//    HW_Machine::RAM()->write(addr, data); // load the page descriptor into RAM
+//    // page table (with only one page descriptor) loaded in memory!
     
  }
 
@@ -46,8 +46,6 @@ HW_MMU_Paging::~HW_MMU_Paging() {
 
 HW_MMU::Register HW_MMU_Paging::readRegister(unsigned int registerNum) {
     switch (registerNum) {
-        case 0:
-            return this->_PTBR;
         case 1:
             return this->_logicalAddressMissed;
         default:
@@ -56,9 +54,6 @@ HW_MMU::Register HW_MMU_Paging::readRegister(unsigned int registerNum) {
 }
 void HW_MMU_Paging::writeRegister(unsigned int registerNum, HW_MMU::Register value) {
     switch (registerNum) {
-        case 0:
-            this->_PTBR = value;
-            break;
         case 1:
             this->_logicalAddressMissed = value;
             break;
@@ -69,7 +64,7 @@ HW_MMU::PhysicalAddress HW_MMU_Paging::translateAddress(HW_MMU::LogicalAddress l
     unsigned int logicalPageNumber = (logical & HW_MMU_Paging::mask_LogicalPage) >> HW_MMU_Paging::off_LogicalPage;
     unsigned int logicalPageOffset = (logical & HW_MMU_Paging::mask_PageOffset) >> HW_MMU_Paging::off_PageOffset;
     Information pageEntry =  OperatingSystem::MMU_Mediator()->getPageFrame(logicalPageNumber);
-            
+
     unsigned int frameNumber = (pageEntry & HW_MMU_Paging::mask_Frame);
     bool isPageInMemory = (pageEntry & HW_MMU_Paging::mask_vality) > 0;
     bool hasProtectionError = (!(pageEntry & HW_MMU_Paging::mask_read) && (operation==Operation::Read) );

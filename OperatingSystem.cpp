@@ -46,7 +46,7 @@ void OperatingSystem::Init() {
 
 
 void OperatingSystem::ExecuteTestCode() { 
-    Debug::cout(Debug::Level::trace, "OperatingSystem::EXecuteTestCode()");
+    Debug::cout(Debug::Level::trace, "OperatingSystem::ExecuteTestCode()");
     Simulator* simulator = Simulator::getInstance();
     Entity* entity = simulator->getEntity();
     Module* module = simulator->getModule();

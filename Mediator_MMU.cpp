@@ -15,15 +15,21 @@
 #include "HW_Machine.h"
 #include "HW_MMU.h"
 #include "OperatingSystem.h"
-
+#include "Traits.h"
 
 MMU::MMU(unsigned int instance) {
     _instance = instance;
-    
+
     //INSERT YOUR CODE HERE
     //...
-    HW_Machine::MMU()->writeRegister(1, NO_ADDRESS);
+    createPageTable(Traits<HW_MMU>::RAMsize / Traits<MemoryManager>::pageSize);
+
+    //Adding page entry that references the simulator application code.
+    Information pageData[PAGESIZE];
+    Page page = Page(0, pageData, true, true, true);
+    pageTable->setPageEntry(0, 0x0000, 0x0, 0x0, page);
     
+    HW_Machine::MMU()->writeRegister(1, NO_ADDRESS);
 }
 
 MMU::~MMU() {
@@ -36,8 +42,8 @@ void MMU::createPageTable(int pageCount) {
     if (pageTable) {
         delete pageTable;
     }
-    
-    Information addr = Traits<HW_MMU>::RAMsize-1;
+
+    Information addr = Traits<HW_MMU>::RAMsize - 1;
     pageTable = new PageTable(addr, pageCount);
 }
 

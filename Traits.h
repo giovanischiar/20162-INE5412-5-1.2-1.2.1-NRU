@@ -90,8 +90,8 @@ template<> struct Traits<Debug> { // CHANGE THE DEBUG LEVEL HERE SETTING THE LEV
 
 template<> struct Traits<Process> {
     static constexpr double timeBetweenCreations = 5e4; // time units
-    static constexpr unsigned int minAddressSpace = 64; // bytes
-    static constexpr unsigned int maxAddressSpace = 64; // bytes
+    static constexpr unsigned int minAddressSpace = 512; // bytes
+    static constexpr unsigned int maxAddressSpace = 512; // bytes
 };
 
 
@@ -106,14 +106,14 @@ template<> struct Traits<Thread> {
 template<> struct Traits<MemoryManager> {
     enum AllocationAlgorithm {FirstFit, NextFit, BestFit, WorstFit};
     enum ReplacementAlgorithm {FIFO, LRU, LFU, NFU, SecondChance};
-    static constexpr unsigned int physicalMemorySize = 32; // bytes
-    static constexpr unsigned int pageSize = 8; // bytes
+    static constexpr unsigned int physicalMemorySize = 256; // bytes
+    static constexpr unsigned int pageSize = 32; // bytes
     static constexpr AllocationAlgorithm allocationAlgorithm = AllocationAlgorithm::BestFit;
     static constexpr ReplacementAlgorithm replacementAlgorithm = ReplacementAlgorithm::FIFO;
 };
 
 template<> struct Traits<VirtualMemorySwap> {
-    static constexpr unsigned int swapAreaSize = 64; // bytes
+    static constexpr unsigned int swapAreaSize = 512; // bytes
 };
 
 template<> struct Traits<Scheduler<Thread>> {
@@ -140,7 +140,7 @@ template<> struct Traits<HW_Timer> {
 };
 
 template<> struct Traits<HW_MMU> {
-    static constexpr unsigned int RAMsize = 32; // information units (eg: bytes) in the physical RAM. RAM width is "Information" (an unsigned int)
+    static constexpr unsigned int RAMsize = 256; // information units (eg: bytes) in the physical RAM. RAM width is "Information" (an unsigned int)
 };
 
 template<> struct Traits<HW_HardDisk> {
