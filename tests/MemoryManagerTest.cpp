@@ -15,7 +15,9 @@
 #include "../Abstr_MemoryManager.h"
 #include "../Traits.h"
 #include "../Page.h"
-
+#include "../Mediator_MMU.h"
+#include "../HW_Machine.h"
+#include "../OperatingSystem.h"
 
 CPPUNIT_TEST_SUITE_REGISTRATION(MemoryManagerTest);
 
@@ -92,4 +94,17 @@ void MemoryManagerTest::testGetFreeAddressWithNoFreeAddressMemoryPartitionReques
         memoryManager.getFreeAddress();
     }
     CPPUNIT_ASSERT_EQUAL(memoryManager.getFreeAddress(), NO_FREE_ADDRESS);
+}
+
+void MemoryManagerTest::testBitRandMAre1WhenPageIsReferencedAndModified() {
+    OperatingSystem::MMU_Mediator()->createPageTable(2);
+    HW_Machine::MMU()->writeMemory(0, 0x111);
+    HW_MMU::Register reg = HW_Machine::MMU()->readRegister(1);
+    CPPUNIT_ASSERT_EQUAL(NO_ADDRESS, reg);
+    HW_Machine::MMU()->writeMemory(0, 0x111);
+    Information pageEntry = OperatingSystem::MMU_Mediator()->getPageFrame(0);
+    bool pageM = (pageEntry & HW_MMU_Paging::mask_M) > 0;
+    bool pageR = (pageEntry & HW_MMU_Paging::mask_R) > 0;
+    CPPUNIT_ASSERT_EQUAL(true, pageM);
+    CPPUNIT_ASSERT_EQUAL(true, pageR);
 }

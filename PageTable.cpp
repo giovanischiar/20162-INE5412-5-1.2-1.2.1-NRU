@@ -37,7 +37,7 @@ Information PageTable::getPageFrame(int pageNumber) {
 }
 
 void PageTable::setPageEntry(int pageNumber, int pageFrame, int M, int R, const Page& page) {
-    PageEntry pageEntry = (1 << HW_MMU_Paging::off_vality) +
+    Information pageEntry = (1 << HW_MMU_Paging::off_vality) +
                           (page.isIsReadable() << HW_MMU_Paging::off_read) +
                           (page.isIsWritable() << HW_MMU_Paging::off_write) +
                           (page.isIsExecutable() << HW_MMU_Paging::off_exec) +
@@ -45,6 +45,16 @@ void PageTable::setPageEntry(int pageNumber, int pageFrame, int M, int R, const 
                           (R << HW_MMU_Paging::off_R) +
                           (pageFrame << HW_MMU_Paging::off_Frame);
     HW_Machine::RAM()->write(baseAddress - pageNumber, pageEntry);
+}
+
+void PageTable::setM(int pageNumber) {
+    Information newPageEntry = (1 << HW_MMU_Paging::off_M) | getPageFrame(pageNumber);
+    HW_Machine::RAM()->write(baseAddress - pageNumber, newPageEntry);
+}
+
+void PageTable::setR(int pageNumber, int R) {
+    Information newPageEntry = (R << HW_MMU_Paging::off_R) | getPageFrame(pageNumber);
+    HW_Machine::RAM()->write(baseAddress - pageNumber, newPageEntry);    
 }
 
 PageTable::PageTable(const PageTable& orig) {

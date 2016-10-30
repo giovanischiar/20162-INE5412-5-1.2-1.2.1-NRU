@@ -17,6 +17,7 @@
 #include "HW_MMU.h"
 #include "PageTable.h"
 
+#define NO_ADDRESS (UINT_MAX)
 
 class MMU {
     friend class ModuleInvoke_HardwareEvent;
@@ -28,7 +29,10 @@ public:
     virtual ~MMU();
 public:
     void createPageTable(int pageCount);
-    void updatePageTable(int pageNumber, PhysicalAddress baseAddress, int M, int R, Page page);
+    void updatePageTable(int pageNumber, PhysicalAddress baseAddress, Page page);
+    void setModified(int pageNumber);
+    void setReferenced(int pageNumber, int R);
+    Information getPageFrame(int pageNumber);
     // INSERT YOUR CODE HERE
     // (Methods to set MMU registers)
     // ...

@@ -18,7 +18,6 @@
 #include "Page.h"
 
 typedef HW_MMU::PhysicalAddress PhysicalAddress;
-typedef HW_MMU_Paging::PageEntry PageEntry; 
 
 class PageTable {
 public:
@@ -26,6 +25,8 @@ public:
     Information getPageFrame(int pageNumber);
     void setPageEntry(int pageNumber, int pageFrame, int M, int R, const Page& page);
     PageTable(const PageTable& orig);
+    void setM(int pageNumber);
+    void setR(int pageNumber, int R);
     virtual ~PageTable();
 private:
     PhysicalAddress baseAddress;

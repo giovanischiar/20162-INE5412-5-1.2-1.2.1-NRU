@@ -15,6 +15,9 @@
 #include "HW_Machine.h"
 
 #include "Simulator.h"
+#include "PageTable.h"
+#include "Mediator_MMU.h"
+#include "OperatingSystem.h"
 
 HW_MMU_Paging::HW_MMU_Paging() {
     // INSERT YOUR CODE HERE
@@ -65,8 +68,7 @@ void HW_MMU_Paging::writeRegister(unsigned int registerNum, HW_MMU::Register val
 HW_MMU::PhysicalAddress HW_MMU_Paging::translateAddress(HW_MMU::LogicalAddress logical, Operation operation) {
     unsigned int logicalPageNumber = (logical & HW_MMU_Paging::mask_LogicalPage) >> HW_MMU_Paging::off_LogicalPage;
     unsigned int logicalPageOffset = (logical & HW_MMU_Paging::mask_PageOffset) >> HW_MMU_Paging::off_PageOffset;
-    PhysicalAddress pageEntryAddress = this->_PTBR + logicalPageNumber;
-    Information pageEntry = HW_Machine::RAM()->read(pageEntryAddress);
+    Information pageEntry =  OperatingSystem::MMU_Mediator()->getPageFrame(logicalPageNumber);
             
     unsigned int frameNumber = (pageEntry & HW_MMU_Paging::mask_Frame);
     bool isPageInMemory = (pageEntry & HW_MMU_Paging::mask_vality) > 0;
@@ -79,7 +81,9 @@ HW_MMU::PhysicalAddress HW_MMU_Paging::translateAddress(HW_MMU::LogicalAddress l
         Entity* entity = simulator->getEntity();
         entity->getAttribute("MethodName")->setValue("MMU::protection_error_interrupt_handler()");
         simulator->insertEvent(simulator->getTnow(), HW_Machine::Module_HardwareEvent(), entity);
-    } else if (isPageInMemory) {
+    } else if (isPageInMemory) {   
+        OperatingSystem::MMU_Mediator()->setReferenced(logicalPageNumber, 0x1);
+        if(operation == Operation::Write) OperatingSystem::MMU_Mediator()->setModified(logicalPageNumber);
         PhysicalAddress phys = (frameNumber << HW_MMU_Paging::off_LogicalPage) + logicalPageOffset;
         return phys;
     } else { // page fault

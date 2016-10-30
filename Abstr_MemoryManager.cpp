@@ -89,7 +89,7 @@ void MemoryManager::handlePageFault(LogicalAddress missedAddress) {
     for (int i = 0; i < PAGESIZE; i++) {
         HW_Machine::RAM()->write(baseAddress + i, missedPage.getValue(i));
     }
-    OperatingSystem::MMU_Mediator()->updatePageTable(missedAddress, baseAddress, 0, 0, missedPage);
+    OperatingSystem::MMU_Mediator()->updatePageTable(missedAddress, baseAddress, missedPage);
 }
 
 const std::list<MemoryPartition>& MemoryManager::getPartitions() const {

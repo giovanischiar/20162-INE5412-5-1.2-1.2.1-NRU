@@ -22,6 +22,7 @@ MMU::MMU(unsigned int instance) {
     
     //INSERT YOUR CODE HERE
     //...
+    HW_Machine::MMU()->writeRegister(1, NO_ADDRESS);
     
 }
 
@@ -50,7 +51,20 @@ void MMU::chunk_fault_interrupt_handler() {
     OperatingSystem::Memory_Manager()->handlePageFault(logicalAddressMissed);
 }
 
-void MMU::updatePageTable(int pageNumber, PhysicalAddress baseAddress, int M, int R, Page page) {
+void MMU::updatePageTable(int pageNumber, PhysicalAddress baseAddress, Page page) {
     int pageFrame = (baseAddress & HW_MMU_Paging::mask_Frame);
-    pageTable->setPageEntry(pageNumber, pageFrame, M, R, page);
+    pageTable->setPageEntry(pageNumber, pageFrame, 0x0, 0x1, page);
+    HW_Machine::MMU()->writeRegister(1, NO_ADDRESS);
+}
+
+void MMU::setModified(int pageNumber) {
+    pageTable->setM(pageNumber);
+}
+
+void MMU::setReferenced(int pageNumber, int R) {
+    pageTable->setR(pageNumber, R);
+}
+
+Information MMU::getPageFrame(int pageNumber) {
+    return pageTable->getPageFrame(pageNumber);
 }

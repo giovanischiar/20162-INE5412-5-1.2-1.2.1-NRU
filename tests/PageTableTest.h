@@ -35,7 +35,6 @@ private:
     void testPageTable();
     void testGetPageFrame();
     void testSetPageEntry();
-
 };
 
 #endif /* PAGETABLETEST_H */

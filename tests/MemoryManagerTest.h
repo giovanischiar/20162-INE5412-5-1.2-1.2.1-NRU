@@ -23,7 +23,9 @@ class MemoryManagerTest : public CPPUNIT_NS::TestFixture {
     CPPUNIT_TEST(testGetFreeAddressWithLotsOfMemoryPartitionRequest);
     CPPUNIT_TEST(testGetFreeAddressWithFullMemoryPartitionRequest);
     CPPUNIT_TEST(testGetFreeAddressWithNoFreeAddressMemoryPartitionRequest);
-
+    
+    CPPUNIT_TEST(testBitRandMAre1WhenPageIsReferencedAndModified);
+    
     CPPUNIT_TEST_SUITE_END();
 
 public:
@@ -37,6 +39,8 @@ private:
     void testGetFreeAddressWithLotsOfMemoryPartitionRequest();
     void testGetFreeAddressWithFullMemoryPartitionRequest();
     void testGetFreeAddressWithNoFreeAddressMemoryPartitionRequest();
+    
+    void testBitRandMAre1WhenPageIsReferencedAndModified();
 };
 
 #endif /* MEMORYMANAGERTEST_H */
