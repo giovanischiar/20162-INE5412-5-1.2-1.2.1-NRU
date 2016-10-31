@@ -13,16 +13,15 @@
 #include "HW_Machine.h"
 #include "Simulator.h"
 
-
 void OperatingSystem::LoadApplication(Application* app, MMU::PhysicalAddress address) {
     Debug::cout(Debug::Level::trace, "OperatingSystem::LoadApplication(" + std::to_string(reinterpret_cast<unsigned long> (app)) + "," + std::to_string(address) + ")");
     std::list<Application::Information> code = app->getCode();
     HW_MMU::Information info;
-    for(std::list<HW_MMU::Information>::iterator it = code.begin(); it != code.end(); it++) {
+    for (std::list<HW_MMU::Information>::iterator it = code.begin(); it != code.end(); it++) {
         info = (*it);
         HW_Machine::RAM()->write(address, info);
         address++;
-    }    
+    }
 }
 
 void OperatingSystem::SetBootApplication(Application* app) {
@@ -31,54 +30,58 @@ void OperatingSystem::SetBootApplication(Application* app) {
     LoadApplication(app, address);
 }
 
-
 void OperatingSystem::Init() {
     Debug::cout(Debug::Level::trace, "OperatingSystem::init()");
     HW_Machine::Init();
-    
+
     OperatingSystem::CPU_Mediator();
     OperatingSystem::DMA_Mediator();
     OperatingSystem::HardDisk_Mediator();
     OperatingSystem::MMU_Mediator();
     OperatingSystem::Timer_Mediator();
-    
-    SetBootApplication(Application::DefaultBootApplication());  // load boot application into RAMs
-    
+
+    SetBootApplication(Application::DefaultBootApplication()); // load boot application into RAMs
+
     //Test Setup
     OperatingSystem::createSwap();
 }
 
-void OperatingSystem::ExecuteTestCode() { 
+void OperatingSystem::ExecuteTestCode() {
     Debug::cout(Debug::Level::trace, "OperatingSystem::ExecuteTestCode()");
     Simulator* simulator = Simulator::getInstance();
     Entity* entity = simulator->getEntity();
     Module* module = simulator->getModule();
     int executionStep = std::stoi(entity->getAttribute("ExecutionStep")->getValue());
     double timeNow = simulator->getTnow();
-    
-    MMU_Mediator()->cleanReferenceBits();
-    
+
+    //    MMU_Mediator()->cleanReferenceBits();
+
     // INSERT HERE YOUR CODE
     // You can write a test code that will be executed and will invoke system calls or whenever you want
     // Follow the examples...
     // ...
-    
+
     switch (executionStep) {
-        case 0:  // ExecutionStep is initialized with 0
-            entity->getAttribute("ExecutionStep")->setValue(std::to_string(executionStep++)); // advance execution step
+        case 0: // ExecutionStep is initialized with 0
+            Debug::cout(Debug::Level::trace, "ExecutionStep: " + std::to_string(0));
+            entity->getAttribute("ExecutionStep")->setValue(std::to_string(++executionStep)); // advance execution step
             simulator->insertEvent(timeNow + 10.0, module, entity); // future event when execution will advance 
             break;
         case 1:
-            entity->getAttribute("ExecutionStep")->setValue(std::to_string(executionStep++)); // advance execution step
+            Debug::cout(Debug::Level::trace, "ExecutionStep: " + std::to_string(1));
+            entity->getAttribute("ExecutionStep")->setValue(std::to_string(++executionStep)); // advance execution step
             break;
         case 2:
-            entity->getAttribute("ExecutionStep")->setValue(std::to_string(executionStep++)); // advance execution step
+            Debug::cout(Debug::Level::trace, "ExecutionStep: " + std::to_string(2));
+            entity->getAttribute("ExecutionStep")->setValue(std::to_string(++executionStep)); // advance execution step
             break;
         case 3:
-            entity->getAttribute("ExecutionStep")->setValue(std::to_string(executionStep++)); // advance execution step
+            Debug::cout(Debug::Level::trace, "ExecutionStep: " + std::to_string(3));
+            entity->getAttribute("ExecutionStep")->setValue(std::to_string(++executionStep)); // advance execution step
             break;
-        default:
-            //entity->getAttribute("ExecutionStep")->setValue(std::to_string(executionStep++)); // advance execution step
+        case 4:
+            Debug::cout(Debug::Level::trace, "ExecutionStep: " + std::to_string(4));
+            entity->getAttribute("ExecutionStep")->setValue(std::to_string(0)); // advance execution step
             break;
     }
 }
@@ -160,17 +163,17 @@ void OperatingSystem::fillChunkData(DataMemoryChunk& chunk, int value) {
     chunk.setData(info);
 }
 
- /*
-  Not used
-  */
- HW_MMU::Information OperatingSystem::asmm(std::string mnemonic) {
-     HW_MMU::Information bincode;
-     /* @TODO 
-      */
-     if (mnemonic == "Process:exec()") {
-         bincode = 0xFFFFFFFF; // - (HW_CPU::addi<<24) + 
-     }
-     //@TODO
-     bincode = (HW_CPU::addi<<26) + (HW_CPU::s0<<21) + (HW_CPU::s1<<16) + 1; // for tests purpose only
-     return bincode;
- }
+/*
+ Not used
+ */
+HW_MMU::Information OperatingSystem::asmm(std::string mnemonic) {
+    HW_MMU::Information bincode;
+    /* @TODO 
+     */
+    if (mnemonic == "Process:exec()") {
+        bincode = 0xFFFFFFFF; // - (HW_CPU::addi<<24) + 
+    }
+    //@TODO
+    bincode = (HW_CPU::addi << 26) + (HW_CPU::s0 << 21) + (HW_CPU::s1 << 16) + 1; // for tests purpose only
+    return bincode;
+}

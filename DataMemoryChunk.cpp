@@ -39,8 +39,8 @@ DataMemoryChunk::~DataMemoryChunk() {
 }
 
 void DataMemoryChunk::setData(Information* data) {
-    if (data) {
-        delete[] data;
+    if (this->data) {
+        delete[] this->data;
     }
     this->data = data;
 }
