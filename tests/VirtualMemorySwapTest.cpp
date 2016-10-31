@@ -65,12 +65,12 @@ void VirtualMemorySwapTest::testFillSwapWithSingleChunk() {
 void VirtualMemorySwapTest::testFillSwapWithFullChunks() {
     std::vector<DataMemoryChunk> chunks;
     int j = 0;
-    int pageCount = SWAPAREASIZE/PAGESIZE;
+    int pageCount = SWAPAREASIZE/PAGESIZE_IN_WORDS;
     for(int i = 0; i < pageCount; i++) {
         DataMemoryChunk chunk(j, true, false, false);
         chunk.setValue(0, i);
         chunks.push_back(chunk);
-        j += PAGESIZE;
+        j += PAGESIZE_IN_WORDS;
     }
    
     VirtualMemorySwap swap;
@@ -80,11 +80,11 @@ void VirtualMemorySwapTest::testFillSwapWithFullChunks() {
     bool isEmpty = std::all_of(swapArea, swapArea+SWAPAREASIZE, [swapArea](int x){ return x==0; });
     CPPUNIT_ASSERT(!isEmpty);
     for(int i = 0; i < pageCount; i++) {
-        Page page = swap.getPage(i*Traits<MemoryManager>::pageSize);
+        Page page = swap.getPage(i*PAGESIZE_IN_WORDS);
         CPPUNIT_ASSERT(page.isIsExecutable());
         CPPUNIT_ASSERT(!page.isIsReadable());
         CPPUNIT_ASSERT(!page.isIsWritable());
-        CPPUNIT_ASSERT_EQUAL(page.getValue(i*PAGESIZE), (Information)(i));
+        CPPUNIT_ASSERT_EQUAL(page.getValue(i*PAGESIZE_IN_WORDS), (Information)(i));
     }
 }
 

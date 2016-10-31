@@ -23,6 +23,7 @@ MMU::MMU(unsigned int instance) {
 
     //INSERT YOUR CODE HERE
     //...
+    pageTable = nullptr;
     createPageTable(Traits<Process>::maxAddressSpace/Traits<MemoryManager>::pageSize);
 
     //Adding page entry that references the simulator application code.
@@ -56,7 +57,8 @@ void MMU::chunk_fault_interrupt_handler() {
     OperatingSystem::Memory_Manager()->handlePageFault(logicalAddressMissed);
 }
 
-void MMU::updatePageTable(int pageNumber, PhysicalAddress baseAddress, Page page) {
+void MMU::updatePageTable(LogicalAddress missedAddress, PhysicalAddress baseAddress, Page page) {
+    int pageNumber = (missedAddress & HW_MMU_Paging::mask_LogicalPage) >> HW_MMU_Paging::off_LogicalPage;
     int pageFrame = (baseAddress & HW_MMU_Paging::mask_Frame);
     pageTable->setPageEntry(pageNumber, pageFrame, 0x0, 0x1, page);
     HW_Machine::MMU()->writeRegister(1, NO_ADDRESS);

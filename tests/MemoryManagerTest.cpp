@@ -15,9 +15,6 @@
 #include "../Abstr_MemoryManager.h"
 #include "../Traits.h"
 #include "../Page.h"
-#include "../Mediator_MMU.h"
-#include "../HW_Machine.h"
-#include "../OperatingSystem.h"
 
 CPPUNIT_TEST_SUITE_REGISTRATION(MemoryManagerTest);
 
@@ -39,72 +36,59 @@ void MemoryManagerTest::testGetFreeAddressWithOneMemoryPartitionRequest() {
     CPPUNIT_ASSERT(partitions.size() == 1);
     PhysicalAddress result = memoryManager.getFreeAddress();
     CPPUNIT_ASSERT(partitions.size() == 2);
-    CPPUNIT_ASSERT_EQUAL(result, (PhysicalAddress)0);
-    CPPUNIT_ASSERT_EQUAL(partitions.begin()->baseAddress, (PhysicalAddress)0);
-    CPPUNIT_ASSERT_EQUAL(partitions.begin()->pageCount, 1U);
-    CPPUNIT_ASSERT_EQUAL(partitions.begin()->type, PartitionType::PROCESS);
+    CPPUNIT_ASSERT_EQUAL((PhysicalAddress)PAGESIZE_IN_WORDS, result);
+    CPPUNIT_ASSERT_EQUAL((PhysicalAddress)PAGESIZE_IN_WORDS, partitions.begin()->baseAddress);
+    CPPUNIT_ASSERT_EQUAL(1U, partitions.begin()->pageCount);
+    CPPUNIT_ASSERT_EQUAL(PartitionType::PROCESS, partitions.begin()->type);
     MemoryPartition nextPartition = *(++partitions.begin());
-    CPPUNIT_ASSERT_EQUAL(nextPartition.baseAddress, (PhysicalAddress)PAGESIZE);
-    CPPUNIT_ASSERT_EQUAL(nextPartition.pageCount, Traits<MemoryManager>::physicalMemorySize / Traits<MemoryManager>::pageSize - 1);
-    CPPUNIT_ASSERT_EQUAL(nextPartition.type, PartitionType::FREE);
+    CPPUNIT_ASSERT_EQUAL((PhysicalAddress)(2*PAGESIZE_IN_WORDS), nextPartition.baseAddress);
+    CPPUNIT_ASSERT_EQUAL((Traits<HW_MMU>::RAMsize / Traits<MemoryManager>::pageSize) - OS_PARTITION_SIZE - PAGETABLE_PARTITION - 1, nextPartition.pageCount);
+    CPPUNIT_ASSERT_EQUAL(PartitionType::FREE, nextPartition.type);
 }
 
 void MemoryManagerTest::testGetFreeAddressWithLotsOfMemoryPartitionRequest() {
     MemoryManager memoryManager;
     unsigned int count = 3;
     PhysicalAddress result[count];
-    for(int i = 0; i < count; i++) {
+    for (int i = 0; i < count; i++) {
         result[i] = memoryManager.getFreeAddress();
     }
     const List<MemoryPartition>& partitions = memoryManager.getPartitions();
     CPPUNIT_ASSERT(partitions.size() == 2);
-    for(int i = 0; i < count; i++) {
-         CPPUNIT_ASSERT_EQUAL(result[i], (PhysicalAddress)PAGESIZE*i);   
+    for (int i = 0; i < count; i++) {
+        CPPUNIT_ASSERT_EQUAL((PhysicalAddress) PAGESIZE_IN_WORDS * (i+1), result[i]);
     }
-    CPPUNIT_ASSERT_EQUAL(partitions.begin()->baseAddress, (PhysicalAddress)0);
-    CPPUNIT_ASSERT_EQUAL(partitions.begin()->pageCount, count);
-    CPPUNIT_ASSERT_EQUAL(partitions.begin()->type, PartitionType::PROCESS);
+    CPPUNIT_ASSERT_EQUAL((PhysicalAddress) PAGESIZE_IN_WORDS, partitions.begin()->baseAddress);
+    CPPUNIT_ASSERT_EQUAL(count, partitions.begin()->pageCount);
+    CPPUNIT_ASSERT_EQUAL(PartitionType::PROCESS, partitions.begin()->type);
     MemoryPartition nextPartition = *(++partitions.begin());
-    CPPUNIT_ASSERT_EQUAL(nextPartition.baseAddress, (PhysicalAddress)(partitions.begin()->pageCount*PAGESIZE));
-    CPPUNIT_ASSERT_EQUAL(nextPartition.pageCount, Traits<MemoryManager>::physicalMemorySize / Traits<MemoryManager>::pageSize - count);
+    CPPUNIT_ASSERT_EQUAL((PhysicalAddress) ((partitions.begin()->pageCount+1) * PAGESIZE_IN_WORDS), nextPartition.baseAddress);
+    CPPUNIT_ASSERT_EQUAL((Traits<HW_MMU>::RAMsize / Traits<MemoryManager>::pageSize) - OS_PARTITION_SIZE - PAGETABLE_PARTITION - count, nextPartition.pageCount);
     CPPUNIT_ASSERT_EQUAL(nextPartition.type, PartitionType::FREE);
 }
 
 void MemoryManagerTest::testGetFreeAddressWithFullMemoryPartitionRequest() {
     MemoryManager memoryManager;
-    unsigned int count = 4;
+    unsigned int count = 5;
     PhysicalAddress result[count];
-    for(int i = 0; i < count; i++) {
+    for (int i = 0; i < count; i++) {
         result[i] = memoryManager.getFreeAddress();
     }
     const List<MemoryPartition>& partitions = memoryManager.getPartitions();
     CPPUNIT_ASSERT(partitions.size() == 1);
-    for(int i = 0; i < count; i++) {
-         CPPUNIT_ASSERT_EQUAL(result[i], (PhysicalAddress)PAGESIZE*i);   
+    for (int i = 0; i < count; i++) {
+        CPPUNIT_ASSERT_EQUAL((PhysicalAddress) PAGESIZE_IN_WORDS * (i+1), result[i]);
     }
-    CPPUNIT_ASSERT_EQUAL(partitions.begin()->baseAddress, (PhysicalAddress)0);
-    CPPUNIT_ASSERT_EQUAL(partitions.begin()->pageCount, Traits<MemoryManager>::physicalMemorySize / Traits<MemoryManager>::pageSize);
-    CPPUNIT_ASSERT_EQUAL(partitions.begin()->type, PartitionType::PROCESS);
+    CPPUNIT_ASSERT_EQUAL((PhysicalAddress) PAGESIZE_IN_WORDS, partitions.begin()->baseAddress);
+    CPPUNIT_ASSERT_EQUAL((Traits<HW_MMU>::RAMsize / Traits<MemoryManager>::pageSize) - OS_PARTITION_SIZE - PAGETABLE_PARTITION, partitions.begin()->pageCount);
+    CPPUNIT_ASSERT_EQUAL(PartitionType::PROCESS, partitions.begin()->type);
 }
 
 void MemoryManagerTest::testGetFreeAddressWithNoFreeAddressMemoryPartitionRequest() {
     MemoryManager memoryManager;
-    unsigned int count = 4;
-    for(int i = 0; i < count; i++) {
+    unsigned int count = 5;
+    for (int i = 0; i < count; i++) {
         memoryManager.getFreeAddress();
     }
     CPPUNIT_ASSERT_EQUAL(memoryManager.getFreeAddress(), NO_FREE_ADDRESS);
-}
-
-void MemoryManagerTest::testBitRandMAre1WhenPageIsReferencedAndModified() {
-    OperatingSystem::MMU_Mediator()->createPageTable(2);
-    HW_Machine::MMU()->writeMemory(0, 0x111);
-    HW_MMU::Register reg = HW_Machine::MMU()->readRegister(1);
-    CPPUNIT_ASSERT_EQUAL(NO_ADDRESS, reg);
-    HW_Machine::MMU()->writeMemory(0, 0x111);
-    Information pageEntry = OperatingSystem::MMU_Mediator()->getPageFrame(0);
-    bool pageM = (pageEntry & HW_MMU_Paging::mask_M) > 0;
-    bool pageR = (pageEntry & HW_MMU_Paging::mask_R) > 0;
-    CPPUNIT_ASSERT_EQUAL(true, pageM);
-    CPPUNIT_ASSERT_EQUAL(true, pageR);
 }

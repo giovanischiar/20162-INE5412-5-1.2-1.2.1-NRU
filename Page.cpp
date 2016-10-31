@@ -14,7 +14,7 @@
 #include "Page.h"
 #include <iostream>
 
-Page::Page(LogicalAddress base, Information (& data)[PAGESIZE], bool isReadable, bool isWritable, bool isExecutable)
+Page::Page(LogicalAddress base, Information (& data)[PAGESIZE_IN_WORDS], bool isReadable, bool isWritable, bool isExecutable)
     :   base(base),    
         isReadable(isReadable),
         isWritable(isWritable),
@@ -25,7 +25,7 @@ Page::Page(LogicalAddress base, Information (& data)[PAGESIZE], bool isReadable,
 
 Page::Page(const Page& orig) {
     this->base = orig.getBase();
-    std::copy(orig.getData(), orig.getData()+PAGESIZE, this->data);
+    std::copy(orig.getData(), orig.getData()+PAGESIZE_IN_WORDS, this->data);
     this->isExecutable = orig.isIsExecutable();
     this->isReadable = orig.isIsReadable();
     this->isWritable = orig.isIsWritable();

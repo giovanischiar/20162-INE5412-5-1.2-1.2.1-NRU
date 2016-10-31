@@ -46,11 +46,11 @@ void VirtualMemorySwap::fillSwap(const std::vector<DataMemoryChunk>& chunks) {
 }
 
 Page VirtualMemorySwap::getPage(LogicalAddress address) {
-    int pageNumber = (int) ((address/sizeof(Information)) / PAGESIZE);
-    int baseAddress = pageNumber * PAGESIZE;
-    Information pageData[PAGESIZE];
+    int pageNumber = (int) (address / PAGESIZE_IN_WORDS);
+    int baseAddress = pageNumber * PAGESIZE_IN_WORDS;
+    Information pageData[PAGESIZE_IN_WORDS];
     int j = 0;
-    for (int i = baseAddress; i < baseAddress + PAGESIZE; i++) {
+    for (int i = baseAddress; i < baseAddress + PAGESIZE_IN_WORDS; i++) {
         pageData[j] = swapArea[i];
         j++;
     }
@@ -70,9 +70,9 @@ Page VirtualMemorySwap::getPage(LogicalAddress address) {
 }
 
 void VirtualMemorySwap::writePage(int pageNumber, Information pageData[]) {
-    int baseAddress = pageNumber * PAGESIZE;
+    int baseAddress = pageNumber * PAGESIZE_IN_WORDS;
     int j = 0;
-    for (int i = baseAddress; i < baseAddress + PAGESIZE; i++) {
+    for (int i = baseAddress; i < baseAddress + PAGESIZE_IN_WORDS; i++) {
         swapArea[i] = pageData[j];
         j++;
     }

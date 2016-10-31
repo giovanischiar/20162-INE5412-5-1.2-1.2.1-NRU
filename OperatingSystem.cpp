@@ -64,8 +64,8 @@ void OperatingSystem::ExecuteTestCode() {
         case 0: // ExecutionStep is initialized with 0
             Debug::cout(Debug::Level::trace, "ExecutionStep: " + std::to_string(0));
             entity->getAttribute("ExecutionStep")->setValue(std::to_string(++executionStep)); // advance execution step
-            HW_Machine::MMU()->readMemory(Traits<MemoryManager>::pageSize);
-
+            HW_Machine::RAM()->dump();
+            HW_Machine::MMU()->readMemory(PAGESIZE_IN_WORDS);
 
 
 
@@ -77,32 +77,32 @@ void OperatingSystem::ExecuteTestCode() {
         case 1:
             Debug::cout(Debug::Level::trace, "ExecutionStep: " + std::to_string(1));
             entity->getAttribute("ExecutionStep")->setValue(std::to_string(++executionStep)); // advance execution step
-            
-            
-            
-            
+
+
+
+
             break;
         case 2:
             Debug::cout(Debug::Level::trace, "ExecutionStep: " + std::to_string(2));
             entity->getAttribute("ExecutionStep")->setValue(std::to_string(++executionStep)); // advance execution step
-            
-            
-            
+
+
+
             break;
         case 3:
             Debug::cout(Debug::Level::trace, "ExecutionStep: " + std::to_string(3));
             entity->getAttribute("ExecutionStep")->setValue(std::to_string(++executionStep)); // advance execution step
-            
-            
-            
-            
+
+
+
+
             break;
         case 4:
             Debug::cout(Debug::Level::trace, "ExecutionStep: " + std::to_string(4));
             entity->getAttribute("ExecutionStep")->setValue(std::to_string(0)); // advance execution step
-            
-            
-            
+
+
+
             break;
     }
 }
@@ -113,55 +113,55 @@ void OperatingSystem::createSwap() {
     fillOS(chunk0);
     chunks.push_back(chunk0);
 
-    DataMemoryChunk chunk1 = DataMemoryChunk(1 * PAGESIZE, true, true, false);
+    DataMemoryChunk chunk1 = DataMemoryChunk(1 * PAGESIZE_IN_WORDS, true, true, false);
     fillChunkData(chunk1, 4);
     chunks.push_back(chunk1);
 
-    DataMemoryChunk chunk2 = DataMemoryChunk(2 * PAGESIZE, true, true, false);
+    DataMemoryChunk chunk2 = DataMemoryChunk(2 * PAGESIZE_IN_WORDS, true, true, false);
     fillChunkData(chunk2, 8);
     chunks.push_back(chunk2);
 
-    DataMemoryChunk chunk3 = DataMemoryChunk(3 * PAGESIZE, true, true, false);
+    DataMemoryChunk chunk3 = DataMemoryChunk(3 * PAGESIZE_IN_WORDS, true, true, false);
     fillChunkData(chunk3, 15);
     chunks.push_back(chunk3);
 
-    DataMemoryChunk chunk4 = DataMemoryChunk(4 * PAGESIZE, true, true, false);
+    DataMemoryChunk chunk4 = DataMemoryChunk(4 * PAGESIZE_IN_WORDS, true, true, false);
     fillChunkData(chunk4, 16);
     chunks.push_back(chunk4);
 
-    DataMemoryChunk chunk5 = DataMemoryChunk(5 * PAGESIZE, false, true, false);
+    DataMemoryChunk chunk5 = DataMemoryChunk(5 * PAGESIZE_IN_WORDS, false, true, false);
     fillChunkData(chunk5, 23);
     chunks.push_back(chunk5);
 
-    DataMemoryChunk chunk6 = DataMemoryChunk(6 * PAGESIZE, false, true, false);
+    DataMemoryChunk chunk6 = DataMemoryChunk(6 * PAGESIZE_IN_WORDS, false, true, false);
     fillChunkData(chunk6, 42);
     chunks.push_back(chunk6);
 
-    DataMemoryChunk chunk7 = DataMemoryChunk(7 * PAGESIZE, false, true, false);
+    DataMemoryChunk chunk7 = DataMemoryChunk(7 * PAGESIZE_IN_WORDS, false, true, false);
     fillChunkData(chunk7, 108);
     chunks.push_back(chunk7);
 
-    DataMemoryChunk chunk8 = DataMemoryChunk(8 * PAGESIZE, false, true, true);
+    DataMemoryChunk chunk8 = DataMemoryChunk(8 * PAGESIZE_IN_WORDS, false, true, true);
     fillChunkData(chunk8, 11);
     chunks.push_back(chunk8);
 
-    DataMemoryChunk chunk9 = DataMemoryChunk(9 * PAGESIZE, false, true, true);
+    DataMemoryChunk chunk9 = DataMemoryChunk(9 * PAGESIZE_IN_WORDS, false, true, true);
     fillChunkData(chunk9, 9);
     chunks.push_back(chunk9);
 
-    DataMemoryChunk chunk10 = DataMemoryChunk(10 * PAGESIZE, false, true, true);
+    DataMemoryChunk chunk10 = DataMemoryChunk(10 * PAGESIZE_IN_WORDS, false, true, true);
     fillChunkData(chunk10, 17);
     chunks.push_back(chunk10);
 
-    DataMemoryChunk chunk11 = DataMemoryChunk(11 * PAGESIZE, false, true, true);
+    DataMemoryChunk chunk11 = DataMemoryChunk(11 * PAGESIZE_IN_WORDS, false, true, true);
     fillChunkData(chunk11, 5);
     chunks.push_back(chunk11);
 
-    DataMemoryChunk chunk12 = DataMemoryChunk(12 * PAGESIZE, false, true, true);
+    DataMemoryChunk chunk12 = DataMemoryChunk(12 * PAGESIZE_IN_WORDS, false, true, true);
     fillChunkData(chunk12, 2);
     chunks.push_back(chunk12);
 
-    DataMemoryChunk chunk13 = DataMemoryChunk(13 * PAGESIZE, false, true, true);
+    DataMemoryChunk chunk13 = DataMemoryChunk(13 * PAGESIZE_IN_WORDS, false, true, true);
     fillChunkData(chunk13, 0);
     chunks.push_back(chunk13);
 
@@ -169,8 +169,8 @@ void OperatingSystem::createSwap() {
 }
 
 void OperatingSystem::fillOS(DataMemoryChunk& chunk) {
-    Information info[PAGESIZE];
-    memset(info, 0, sizeof (Information) * PAGESIZE);
+    Information info[PAGESIZE_IN_WORDS];
+    memset(info, 0, sizeof (Information) * PAGESIZE_IN_WORDS);
     info[0] = 536879104;
     info[1] = 12;
     info[2] = 545267713;
@@ -179,8 +179,8 @@ void OperatingSystem::fillOS(DataMemoryChunk& chunk) {
 }
 
 void OperatingSystem::fillChunkData(DataMemoryChunk& chunk, int value) {
-    Information info[PAGESIZE];
-    memset(info, value, sizeof (Information) * PAGESIZE);
+    Information info[PAGESIZE_IN_WORDS];
+    std::fill(info, info + PAGESIZE_IN_WORDS, value);
     chunk.setData(info);
 }
 

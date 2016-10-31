@@ -35,7 +35,7 @@ void PageTableTest::testPageTable() {
     PhysicalAddress baseAddress = Traits<HW_MMU>::RAMsize-1;
     int pageCount = 2;
     PageTable pageTable(baseAddress, pageCount);
-    for(int i = baseAddress; i > baseAddress-(pageCount*PAGESIZE); i--) {
+    for(int i = baseAddress; i > baseAddress-(pageCount*PAGESIZE_IN_WORDS); i--) {
         CPPUNIT_ASSERT_EQUAL(0U, HW_Machine::RAM()->read(i));
     }
 }

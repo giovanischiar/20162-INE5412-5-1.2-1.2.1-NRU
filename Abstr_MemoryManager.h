@@ -16,6 +16,8 @@
 //enum MemoryAllocationAlgorithm {FirstFit, NextFit, BestFit, WorstFit};
 
 #define NO_FREE_ADDRESS (UINT_MAX)
+#define OS_PARTITION_SIZE (1)
+#define PAGETABLE_PARTITION (2)
 
 enum PartitionType {
     PROCESS, FREE

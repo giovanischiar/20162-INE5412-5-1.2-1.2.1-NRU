@@ -30,7 +30,7 @@ public:
     virtual ~MMU();
 public:
     void createPageTable(int pageCount);
-    void updatePageTable(int pageNumber, PhysicalAddress baseAddress, Page page);
+    void updatePageTable(LogicalAddress missedAddress, PhysicalAddress baseAddress, Page page);
     void setModified(int pageNumber);
     void setReferenced(int pageNumber, int R);
     Information getPageFrame(int pageNumber);

@@ -17,7 +17,7 @@
 #include <string.h>
 
 DataMemoryChunk::DataMemoryChunk(LogicalAddress beginAddress, bool isExecutable, bool isReadable, bool isWritable) 
-    : MemoryChunk(beginAddress, PAGESIZE, isExecutable, isReadable, isWritable)
+    : MemoryChunk(beginAddress, PAGESIZE_IN_WORDS, isExecutable, isReadable, isWritable)
 {
 }
 
@@ -32,7 +32,7 @@ DataMemoryChunk::~DataMemoryChunk() {
 }
 
 void DataMemoryChunk::setData(Information* data) {
-    std::copy(data, data+PAGESIZE, this->data);
+    std::copy(data, data+PAGESIZE_IN_WORDS, this->data);
 }
 
 Information const * DataMemoryChunk::getData() const {

@@ -22,9 +22,9 @@ class HW_MMU_Paging : public HW_MMU {
 public:
 
     enum ILogAddr {
-        mask_LogicalPage = 0xFFFFFFE0, 
-        mask_PageOffset  = 0x0000001F, //2 bits for word offset and 3 bits for page offset
-        off_LogicalPage  = 5,
+        mask_LogicalPage = 0xFFFFFFF8, 
+        mask_PageOffset  = 0x00000007, //3 bits for page offset
+        off_LogicalPage  = 3,
         off_PageOffset   = 0
     };
 

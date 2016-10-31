@@ -16,14 +16,11 @@
 
 #include <iostream>
 
-#define OS_PARTITION_SIZE (1)
-#define PAGETABLE_PARTITION (2)
-
 MemoryManager::MemoryManager() {
     _chunks = new std::list<MemoryChunk*>();
     MemoryPartition partition;
     partition.type = FREE;
-    partition.baseAddress = PAGESIZE;
+    partition.baseAddress = PAGESIZE_IN_WORDS;
     int totalPagesInMemory = (Traits<HW_MMU>::RAMsize / Traits<MemoryManager>::pageSize);
     partition.pageCount = totalPagesInMemory - OS_PARTITION_SIZE - PAGETABLE_PARTITION;
     partitions.push_back(partition);
@@ -91,15 +88,15 @@ void MemoryManager::handlePageFault(LogicalAddress missedAddress) {
         PageToBeReplaced pageToBeReplaced = OperatingSystem::MMU_Mediator()->findPageToBeReplaced();
         baseAddress = pageToBeReplaced.basePhysicalAddress;
         if (pageToBeReplaced.modified) {
-            Information pageData[PAGESIZE];
-            for (int i = 0; i < PAGESIZE; i++) {
+            Information pageData[PAGESIZE_IN_WORDS];
+            for (int i = 0; i < PAGESIZE_IN_WORDS; i++) {
                 pageData[i] = HW_Machine::RAM()->read(pageToBeReplaced.basePhysicalAddress + i);
             }
             virtualSwapArea.writePage(pageToBeReplaced.pageNumber, pageData);
         }
     }
-    for (int i = 0; i < PAGESIZE; i++) {
-        HW_Machine::RAM()->write(baseAddress + i, missedPage.getValue(i));
+    for (int i = 0; i < PAGESIZE_IN_WORDS; i++) {
+        HW_Machine::RAM()->write(baseAddress + i, missedPage.getData()[i]);
     }
     OperatingSystem::MMU_Mediator()->updatePageTable(missedAddress, baseAddress, missedPage);
 }
@@ -125,7 +122,7 @@ PhysicalAddress MemoryManager::getFreeAddress() {
                 partitions.insert(freePartition, newPartition);
 
                 freePartition->pageCount--;
-                freePartition->baseAddress += PAGESIZE;
+                freePartition->baseAddress += PAGESIZE_IN_WORDS;
                 if (freePartition->pageCount == 0) {
                     partitions.erase(freePartition);
                 }
@@ -137,19 +134,19 @@ PhysicalAddress MemoryManager::getFreeAddress() {
                 previousPartition->pageCount++;
 
                 freePartition->pageCount--;
-                freePartition->baseAddress += PAGESIZE;
+                freePartition->baseAddress += PAGESIZE_IN_WORDS;
                 if (freePartition->pageCount == 0) {
                     partitions.erase(freePartition);
                 }
 
-                freeAddress = previousPartition->baseAddress + (previousPartition->pageCount - 1) * PAGESIZE;
+                freeAddress = previousPartition->baseAddress + (previousPartition->pageCount - 1) * PAGESIZE_IN_WORDS;
             } else {
                 List<MemoryPartition>::iterator previousPartition = --freePartition;
                 freePartition++;
                 previousPartition->pageCount++;
 
                 freePartition->pageCount--;
-                freePartition->baseAddress += PAGESIZE;
+                freePartition->baseAddress += PAGESIZE_IN_WORDS;
                 if (freePartition->pageCount == 0) {
                     List<MemoryPartition>::iterator nextPartition = ++freePartition;
                     freePartition--;
@@ -158,7 +155,7 @@ PhysicalAddress MemoryManager::getFreeAddress() {
                     partitions.erase(nextPartition);
                 }
 
-                freeAddress = previousPartition->baseAddress + (previousPartition->pageCount - 1) * PAGESIZE;
+                freeAddress = previousPartition->baseAddress + (previousPartition->pageCount - 1) * PAGESIZE_IN_WORDS;
             }
             return freeAddress;
         }

@@ -29,8 +29,9 @@ public:
 public:
     Information read(PhysicalAddress address);
     void write(PhysicalAddress address, Information data);
+    void dump();
 private:
-    Information _ramMemory[Traits<HW_MMU>::RAMsize];
+    Information _ramMemory[Traits<HW_MMU>::RAMsize/sizeof(Information)];
 };
 
 #endif /* HW_RAM_H */

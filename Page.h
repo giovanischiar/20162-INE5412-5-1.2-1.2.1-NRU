@@ -18,11 +18,11 @@
 
 typedef HW_MMU::LogicalAddress LogicalAddress;
 typedef HW_MMU::Information Information;
-#define PAGESIZE (Traits<MemoryManager>::pageSize/sizeof(Information))
+#define PAGESIZE_IN_WORDS (Traits<MemoryManager>::pageSize/sizeof(Information))
 
 class Page {
 public:
-    Page(LogicalAddress base, Information (& data)[PAGESIZE], bool isReadable, bool isWritable, bool isExecutable);
+    Page(LogicalAddress base, Information (& data)[PAGESIZE_IN_WORDS], bool isReadable, bool isWritable, bool isExecutable);
     Page(const Page& orig);
     virtual ~Page();
     bool isIsExecutable() const;
@@ -32,7 +32,7 @@ public:
     Information getValue(unsigned int index) const;
     LogicalAddress getBase() const;
 private:
-    Information data[PAGESIZE];
+    Information data[PAGESIZE_IN_WORDS];
     LogicalAddress base;
     bool isReadable;
     bool isWritable;

@@ -29,7 +29,7 @@ public:
     Information const * getData() const;
     void setValue(unsigned int index, Information value);
 private:
-    Information data[PAGESIZE];
+    Information data[PAGESIZE_IN_WORDS];
 };
 
 #endif /* DATAMEMORYCHUNK_H */
