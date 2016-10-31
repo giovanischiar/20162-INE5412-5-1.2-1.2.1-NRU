@@ -50,9 +50,9 @@ Information const * Page::getData() const {
     return data;
 }
 
-Information Page::getValue(unsigned int index) const {   
-    std::cout << "get Page.data[" << index-base << "] = " << data[index-base] << std::endl;
-    return data[index-base];
+Information Page::getValue(unsigned int wordIndex) const {   
+    std::cout << "get Page.data[" << wordIndex-base << "] = " << data[wordIndex-base] << std::endl;
+    return data[wordIndex-base];
 }
 
 LogicalAddress Page::getBase() const {

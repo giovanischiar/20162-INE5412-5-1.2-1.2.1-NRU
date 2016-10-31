@@ -64,23 +64,45 @@ void OperatingSystem::ExecuteTestCode() {
         case 0: // ExecutionStep is initialized with 0
             Debug::cout(Debug::Level::trace, "ExecutionStep: " + std::to_string(0));
             entity->getAttribute("ExecutionStep")->setValue(std::to_string(++executionStep)); // advance execution step
-            simulator->insertEvent(timeNow + 10.0, module, entity); // future event when execution will advance 
+            HW_Machine::MMU()->readMemory(Traits<MemoryManager>::pageSize);
+
+
+
+
+
+
+
+
             break;
         case 1:
             Debug::cout(Debug::Level::trace, "ExecutionStep: " + std::to_string(1));
             entity->getAttribute("ExecutionStep")->setValue(std::to_string(++executionStep)); // advance execution step
+            
+            
+            
+            
             break;
         case 2:
             Debug::cout(Debug::Level::trace, "ExecutionStep: " + std::to_string(2));
             entity->getAttribute("ExecutionStep")->setValue(std::to_string(++executionStep)); // advance execution step
+            
+            
+            
             break;
         case 3:
             Debug::cout(Debug::Level::trace, "ExecutionStep: " + std::to_string(3));
             entity->getAttribute("ExecutionStep")->setValue(std::to_string(++executionStep)); // advance execution step
+            
+            
+            
+            
             break;
         case 4:
             Debug::cout(Debug::Level::trace, "ExecutionStep: " + std::to_string(4));
             entity->getAttribute("ExecutionStep")->setValue(std::to_string(0)); // advance execution step
+            
+            
+            
             break;
     }
 }

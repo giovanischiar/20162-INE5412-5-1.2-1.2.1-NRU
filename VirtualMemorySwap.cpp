@@ -46,7 +46,7 @@ void VirtualMemorySwap::fillSwap(const std::vector<DataMemoryChunk>& chunks) {
 }
 
 Page VirtualMemorySwap::getPage(LogicalAddress address) {
-    int pageNumber = (int) (address / PAGESIZE);
+    int pageNumber = (int) ((address/sizeof(Information)) / PAGESIZE);
     int baseAddress = pageNumber * PAGESIZE;
     Information pageData[PAGESIZE];
     int j = 0;
