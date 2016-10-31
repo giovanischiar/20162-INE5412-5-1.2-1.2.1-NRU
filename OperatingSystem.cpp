@@ -12,6 +12,7 @@
 #include "HW_CPU.h"
 #include "HW_Machine.h"
 #include "Simulator.h"
+#include "DataMemoryChunk.h"
 
 void OperatingSystem::LoadApplication(Application* app, MMU::PhysicalAddress address) {
     Debug::cout(Debug::Level::trace, "OperatingSystem::LoadApplication(" + std::to_string(reinterpret_cast<unsigned long> (app)) + "," + std::to_string(address) + ")");
@@ -54,8 +55,6 @@ void OperatingSystem::ExecuteTestCode() {
     int executionStep = std::stoi(entity->getAttribute("ExecutionStep")->getValue());
     double timeNow = simulator->getTnow();
 
-    //    MMU_Mediator()->cleanReferenceBits();
-
     // INSERT HERE YOUR CODE
     // You can write a test code that will be executed and will invoke system calls or whenever you want
     // Follow the examples...
@@ -87,60 +86,60 @@ void OperatingSystem::ExecuteTestCode() {
 }
 
 void OperatingSystem::createSwap() {
-    std::list<DataMemoryChunk> chunks;
-    DataMemoryChunk chunk0 = DataMemoryChunk(0, PAGESIZE, true, true, true);
+    std::vector<DataMemoryChunk> chunks;
+    DataMemoryChunk chunk0 = DataMemoryChunk(0, true, true, true);
     fillOS(chunk0);
     chunks.push_back(chunk0);
 
-    DataMemoryChunk chunk1 = DataMemoryChunk(1 * PAGESIZE, PAGESIZE, true, true, false);
+    DataMemoryChunk chunk1 = DataMemoryChunk(1 * PAGESIZE, true, true, false);
     fillChunkData(chunk1, 4);
     chunks.push_back(chunk1);
 
-    DataMemoryChunk chunk2 = DataMemoryChunk(2 * PAGESIZE, PAGESIZE, true, true, false);
+    DataMemoryChunk chunk2 = DataMemoryChunk(2 * PAGESIZE, true, true, false);
     fillChunkData(chunk2, 8);
     chunks.push_back(chunk2);
 
-    DataMemoryChunk chunk3 = DataMemoryChunk(3 * PAGESIZE, PAGESIZE, true, true, false);
+    DataMemoryChunk chunk3 = DataMemoryChunk(3 * PAGESIZE, true, true, false);
     fillChunkData(chunk3, 15);
     chunks.push_back(chunk3);
 
-    DataMemoryChunk chunk4 = DataMemoryChunk(4 * PAGESIZE, PAGESIZE, true, true, false);
+    DataMemoryChunk chunk4 = DataMemoryChunk(4 * PAGESIZE, true, true, false);
     fillChunkData(chunk4, 16);
     chunks.push_back(chunk4);
 
-    DataMemoryChunk chunk5 = DataMemoryChunk(5 * PAGESIZE, PAGESIZE, false, true, false);
+    DataMemoryChunk chunk5 = DataMemoryChunk(5 * PAGESIZE, false, true, false);
     fillChunkData(chunk5, 23);
     chunks.push_back(chunk5);
 
-    DataMemoryChunk chunk6 = DataMemoryChunk(6 * PAGESIZE, PAGESIZE, false, true, false);
+    DataMemoryChunk chunk6 = DataMemoryChunk(6 * PAGESIZE, false, true, false);
     fillChunkData(chunk6, 42);
     chunks.push_back(chunk6);
 
-    DataMemoryChunk chunk7 = DataMemoryChunk(7 * PAGESIZE, PAGESIZE, false, true, false);
+    DataMemoryChunk chunk7 = DataMemoryChunk(7 * PAGESIZE, false, true, false);
     fillChunkData(chunk7, 108);
     chunks.push_back(chunk7);
 
-    DataMemoryChunk chunk8 = DataMemoryChunk(8 * PAGESIZE, PAGESIZE, false, true, true);
+    DataMemoryChunk chunk8 = DataMemoryChunk(8 * PAGESIZE, false, true, true);
     fillChunkData(chunk8, 11);
     chunks.push_back(chunk8);
 
-    DataMemoryChunk chunk9 = DataMemoryChunk(9 * PAGESIZE, PAGESIZE, false, true, true);
+    DataMemoryChunk chunk9 = DataMemoryChunk(9 * PAGESIZE, false, true, true);
     fillChunkData(chunk9, 9);
     chunks.push_back(chunk9);
 
-    DataMemoryChunk chunk10 = DataMemoryChunk(10 * PAGESIZE, PAGESIZE, false, true, true);
+    DataMemoryChunk chunk10 = DataMemoryChunk(10 * PAGESIZE, false, true, true);
     fillChunkData(chunk10, 17);
     chunks.push_back(chunk10);
 
-    DataMemoryChunk chunk11 = DataMemoryChunk(11 * PAGESIZE, PAGESIZE, false, true, true);
+    DataMemoryChunk chunk11 = DataMemoryChunk(11 * PAGESIZE, false, true, true);
     fillChunkData(chunk11, 5);
     chunks.push_back(chunk11);
 
-    DataMemoryChunk chunk12 = DataMemoryChunk(12 * PAGESIZE, PAGESIZE, false, true, true);
+    DataMemoryChunk chunk12 = DataMemoryChunk(12 * PAGESIZE, false, true, true);
     fillChunkData(chunk12, 2);
     chunks.push_back(chunk12);
 
-    DataMemoryChunk chunk13 = DataMemoryChunk(13 * PAGESIZE, PAGESIZE, false, true, true);
+    DataMemoryChunk chunk13 = DataMemoryChunk(13 * PAGESIZE, false, true, true);
     fillChunkData(chunk13, 0);
     chunks.push_back(chunk13);
 

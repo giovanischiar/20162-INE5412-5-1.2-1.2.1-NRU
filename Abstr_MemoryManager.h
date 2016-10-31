@@ -41,7 +41,7 @@ public: // do not change
     MemoryChunk* getMemoryChunk(unsigned int index);
 
     //Test methods
-    void fillSwap(const List<DataMemoryChunk>& chunks);
+    void fillSwap(const std::vector<DataMemoryChunk>& chunks);
 private: // do not change
     std::list<MemoryChunk*>* _chunks;
 

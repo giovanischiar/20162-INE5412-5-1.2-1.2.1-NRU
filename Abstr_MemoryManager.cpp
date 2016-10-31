@@ -167,7 +167,7 @@ PhysicalAddress MemoryManager::getFreeAddress() {
     return NO_FREE_ADDRESS;
 }
 
-void MemoryManager::fillSwap(const std::list<DataMemoryChunk>& chunks) {
+void MemoryManager::fillSwap(const std::vector<DataMemoryChunk>& chunks) {
     virtualSwapArea.fillSwap(chunks);
 }
 

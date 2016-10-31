@@ -16,6 +16,7 @@
 #include "VirtualMemorySwap.h"
 #include "Traits.h"
 #include "Page.h"
+#include "DataMemoryChunk.h"
 #include <string.h>
 
 const unsigned int SWAPAREASIZE = (Traits<MemoryManager>::swapAreaSize / sizeof (Information));
@@ -24,13 +25,13 @@ VirtualMemorySwap::VirtualMemorySwap() {
     swapArea = new Information[SWAPAREASIZE];
 }
 
-void VirtualMemorySwap::fillSwap(const List<DataMemoryChunk>& chunks) {
+void VirtualMemorySwap::fillSwap(const std::vector<DataMemoryChunk>& chunks) {
     memset(swapArea, 0, Traits<MemoryManager>::swapAreaSize);
-    std::list<DataMemoryChunk>::const_iterator it;
+    std::vector<DataMemoryChunk>::const_iterator it;
     int j = 0;
     for (it = chunks.cbegin(); it != chunks.cend(); it++) {
         int size = it->getSize();
-        Information* chunkArray = it->getData();
+        Information const * chunkArray = it->getData();
         MemoryChunk* chunk = new MemoryChunk(it->getBeginLogicalAddress(),
                 it->getSize(),
                 it->isIsExecutable(),

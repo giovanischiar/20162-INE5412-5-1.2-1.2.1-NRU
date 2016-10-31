@@ -15,20 +15,21 @@
 #define DATAMEMORYCHUNK_H
 
 #include "Abstr_MemoryChunk.h"
+#include "Page.h"
 
 typedef HW_MMU::Information Information;
 typedef HW_MMU::LogicalAddress LogicalAddress;
 
 class DataMemoryChunk : public MemoryChunk {
 public:
-    DataMemoryChunk(LogicalAddress beginAddress, unsigned int size, bool isExecutable, bool isReadable, bool isWritable);
+    DataMemoryChunk(LogicalAddress beginAddress, bool isExecutable, bool isReadable, bool isWritable);
     DataMemoryChunk(const DataMemoryChunk& orig);
     virtual ~DataMemoryChunk();
     void setData(Information* data);
-    Information* getData() const;
+    Information const * getData() const;
     void setValue(unsigned int index, Information value);
 private:
-    Information* data;
+    Information data[PAGESIZE];
 };
 
 #endif /* DATAMEMORYCHUNK_H */

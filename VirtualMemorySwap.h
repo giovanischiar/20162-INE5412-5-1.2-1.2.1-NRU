@@ -16,20 +16,22 @@
 
 #include <vector>
 #include <list>
-#include "DataMemoryChunk.h"
+#include "HW_MMU.h"
+#include "Abstr_MemoryChunk.h"
 
 #define List std::list
 extern const unsigned int SWAPAREASIZE;
 
 class Page;
+class DataMemoryChunk;
 
 class VirtualMemorySwap {
 public:
     typedef HW_MMU::Information Information;
     VirtualMemorySwap();
-    void fillSwap(const List<DataMemoryChunk>& chunks);
+    void fillSwap(const std::vector<DataMemoryChunk>& chunks);
     VirtualMemorySwap(const VirtualMemorySwap& orig);
-    Page getPage(LogicalAddress address);
+    Page getPage(HW_MMU::LogicalAddress address);
     void writePage(int pageNumber, Information pageData[]);
     virtual ~VirtualMemorySwap();
     std::vector<MemoryChunk*> getChunks() const;

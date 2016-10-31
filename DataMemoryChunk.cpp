@@ -16,37 +16,27 @@
 #include <iostream>
 #include <string.h>
 
-
-DataMemoryChunk::DataMemoryChunk(LogicalAddress beginAddress, unsigned int size, bool isExecutable, bool isReadable, bool isWritable) 
-    : MemoryChunk(beginAddress, size, isExecutable, isReadable, isWritable)
+DataMemoryChunk::DataMemoryChunk(LogicalAddress beginAddress, bool isExecutable, bool isReadable, bool isWritable) 
+    : MemoryChunk(beginAddress, PAGESIZE, isExecutable, isReadable, isWritable)
 {
-    data = new Information[size];
-    memset(data, 0, size*sizeof(Information));
 }
 
 DataMemoryChunk::DataMemoryChunk(const DataMemoryChunk& orig) 
     : MemoryChunk(orig)
 {
-    data = new Information[orig.getSize()];
-    Information* origData = orig.getData();
-    std::copy(origData, origData+orig.getSize(), data);
+    Information const * origData = orig.getData();
+    std::copy(origData, origData+orig.getSize(), this->data);
 }
 
 DataMemoryChunk::~DataMemoryChunk() {
-    if (data) {
-        delete[] data;
-    }
 }
 
 void DataMemoryChunk::setData(Information* data) {
-    if (this->data) {
-        delete[] this->data;
-    }
-    this->data = data;
+    std::copy(data, data+PAGESIZE, this->data);
 }
 
-Information* DataMemoryChunk::getData() const {
-    return data;
+Information const * DataMemoryChunk::getData() const {
+    return this->data;
 }
 
 void DataMemoryChunk::setValue(unsigned int index, Information value) {
@@ -54,6 +44,6 @@ void DataMemoryChunk::setValue(unsigned int index, Information value) {
         return;
     }
     
-    data[index] = value;
+    this->data[index] = value;
     std::cout << "set DataMemoryChun.data[" << index << "] = " << value << std::endl;
 }

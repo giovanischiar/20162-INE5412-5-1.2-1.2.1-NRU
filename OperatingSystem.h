@@ -24,7 +24,7 @@
 
 #include "ModuleInvoke_HardwareEvent.h"
 
-#include "DataMemoryChunk.h"
+class DataMemoryChunk;
 
 class OperatingSystem {
 private:
