@@ -65,8 +65,7 @@ void OperatingSystem::ExecuteTestCode() {
             Debug::cout(Debug::Level::trace, "ExecutionStep: " + std::to_string(0));
             entity->getAttribute("ExecutionStep")->setValue(std::to_string(++executionStep)); // advance execution step
             HW_Machine::RAM()->dump();
-            HW_Machine::MMU()->readMemory(PAGESIZE_IN_WORDS);
-
+            std::cout << HW_Machine::MMU()->readMemory(10*PAGESIZE_IN_WORDS) << std::endl;
 
 
 

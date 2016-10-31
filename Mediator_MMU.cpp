@@ -59,7 +59,7 @@ void MMU::chunk_fault_interrupt_handler() {
 
 void MMU::updatePageTable(LogicalAddress missedAddress, PhysicalAddress baseAddress, Page page) {
     int pageNumber = (missedAddress & HW_MMU_Paging::mask_LogicalPage) >> HW_MMU_Paging::off_LogicalPage;
-    int pageFrame = (baseAddress & HW_MMU_Paging::mask_Frame);
+    int pageFrame = (baseAddress & HW_MMU_Paging::mask_Frame) >> HW_MMU_Paging::off_LogicalPage;
     pageTable->setPageEntry(pageNumber, pageFrame, 0x0, 0x1, page);
     HW_Machine::MMU()->writeRegister(1, NO_ADDRESS);
 }
