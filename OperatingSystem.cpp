@@ -5,6 +5,7 @@
  * Created on October 9, 2015, 9:04 PM
  */
 #include <string>
+#include <cstring>
 
 #include "OperatingSystem.h"
 #include "Application.h"
@@ -42,8 +43,10 @@ void OperatingSystem::Init() {
     OperatingSystem::Timer_Mediator();
     
     SetBootApplication(Application::DefaultBootApplication());  // load boot application into RAMs
+    
+    //Test Setup
+    OperatingSystem::createSwap();
 }
-
 
 void OperatingSystem::ExecuteTestCode() { 
     Debug::cout(Debug::Level::trace, "OperatingSystem::ExecuteTestCode()");
@@ -78,7 +81,83 @@ void OperatingSystem::ExecuteTestCode() {
             //entity->getAttribute("ExecutionStep")->setValue(std::to_string(executionStep++)); // advance execution step
             break;
     }
-    
+}
+
+void OperatingSystem::createSwap() {
+    std::list<DataMemoryChunk> chunks;
+    DataMemoryChunk chunk0 = DataMemoryChunk(0, PAGESIZE, true, true, true);
+    fillOS(chunk0);
+    chunks.push_back(chunk0);
+
+    DataMemoryChunk chunk1 = DataMemoryChunk(1 * PAGESIZE, PAGESIZE, true, true, false);
+    fillChunkData(chunk1, 4);
+    chunks.push_back(chunk1);
+
+    DataMemoryChunk chunk2 = DataMemoryChunk(2 * PAGESIZE, PAGESIZE, true, true, false);
+    fillChunkData(chunk2, 8);
+    chunks.push_back(chunk2);
+
+    DataMemoryChunk chunk3 = DataMemoryChunk(3 * PAGESIZE, PAGESIZE, true, true, false);
+    fillChunkData(chunk3, 15);
+    chunks.push_back(chunk3);
+
+    DataMemoryChunk chunk4 = DataMemoryChunk(4 * PAGESIZE, PAGESIZE, true, true, false);
+    fillChunkData(chunk4, 16);
+    chunks.push_back(chunk4);
+
+    DataMemoryChunk chunk5 = DataMemoryChunk(5 * PAGESIZE, PAGESIZE, false, true, false);
+    fillChunkData(chunk5, 23);
+    chunks.push_back(chunk5);
+
+    DataMemoryChunk chunk6 = DataMemoryChunk(6 * PAGESIZE, PAGESIZE, false, true, false);
+    fillChunkData(chunk6, 42);
+    chunks.push_back(chunk6);
+
+    DataMemoryChunk chunk7 = DataMemoryChunk(7 * PAGESIZE, PAGESIZE, false, true, false);
+    fillChunkData(chunk7, 108);
+    chunks.push_back(chunk7);
+
+    DataMemoryChunk chunk8 = DataMemoryChunk(8 * PAGESIZE, PAGESIZE, false, true, true);
+    fillChunkData(chunk8, 11);
+    chunks.push_back(chunk8);
+
+    DataMemoryChunk chunk9 = DataMemoryChunk(9 * PAGESIZE, PAGESIZE, false, true, true);
+    fillChunkData(chunk9, 9);
+    chunks.push_back(chunk9);
+
+    DataMemoryChunk chunk10 = DataMemoryChunk(10 * PAGESIZE, PAGESIZE, false, true, true);
+    fillChunkData(chunk10, 17);
+    chunks.push_back(chunk10);
+
+    DataMemoryChunk chunk11 = DataMemoryChunk(11 * PAGESIZE, PAGESIZE, false, true, true);
+    fillChunkData(chunk11, 5);
+    chunks.push_back(chunk11);
+
+    DataMemoryChunk chunk12 = DataMemoryChunk(12 * PAGESIZE, PAGESIZE, false, true, true);
+    fillChunkData(chunk12, 2);
+    chunks.push_back(chunk12);
+
+    DataMemoryChunk chunk13 = DataMemoryChunk(13 * PAGESIZE, PAGESIZE, false, true, true);
+    fillChunkData(chunk13, 0);
+    chunks.push_back(chunk13);
+
+    OperatingSystem::Memory_Manager()->fillSwap(chunks);
+}
+
+void OperatingSystem::fillOS(DataMemoryChunk& chunk) {
+    Information info[PAGESIZE];
+    memset(info, 0, sizeof (Information) * PAGESIZE);
+    info[0] = 536879104;
+    info[1] = 12;
+    info[2] = 545267713;
+    info[3] = 134217729;
+    chunk.setData(info);
+}
+
+void OperatingSystem::fillChunkData(DataMemoryChunk& chunk, int value) {
+    Information info[PAGESIZE];
+    memset(info, value, sizeof (Information) * PAGESIZE);
+    chunk.setData(info);
 }
 
  /*

@@ -118,6 +118,14 @@
                    displayName="Arquivos de Teste"
                    projectFiles="false"
                    kind="TEST_LOGICAL_FOLDER">
+      <logicalFolder name="f4"
+                     displayName="Algoritmo de substuição"
+                     projectFiles="true"
+                     kind="TEST">
+        <itemPath>tests/NRUTest.cpp</itemPath>
+        <itemPath>tests/NRUTest.h</itemPath>
+        <itemPath>tests/NRUTestRunner.cpp</itemPath>
+      </logicalFolder>
       <logicalFolder name="f2"
                      displayName="gerenciamento de memória"
                      projectFiles="true"
@@ -411,6 +419,20 @@
           </linkerLibItems>
         </linkerTool>
       </folder>
+      <folder path="TestFiles/f4">
+        <cTool>
+          <commandLine>`cppunit-config --cflags`</commandLine>
+        </cTool>
+        <ccTool>
+          <commandLine>`cppunit-config --cflags`</commandLine>
+        </ccTool>
+        <linkerTool>
+          <output>${TESTDIR}/TestFiles/f4</output>
+          <linkerLibItems>
+            <linkerOptionItem>`cppunit-config --libs`</linkerOptionItem>
+          </linkerLibItems>
+        </linkerTool>
+      </folder>
       <item path="main.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="tests/MemoryManagerTest.cpp" ex="false" tool="1" flavor2="0">
@@ -418,6 +440,12 @@
       <item path="tests/MemoryManagerTest.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="tests/MemoryManagerTestRunner.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="tests/NRUTest.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="tests/NRUTest.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="tests/NRUTestRunner.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="tests/PageTableTest.cpp" ex="false" tool="1" flavor2="0">
       </item>
@@ -697,6 +725,20 @@
           </linkerLibItems>
         </linkerTool>
       </folder>
+      <folder path="TestFiles/f4">
+        <cTool>
+          <commandLine>`cppunit-config --cflags`</commandLine>
+        </cTool>
+        <ccTool>
+          <commandLine>`cppunit-config --cflags`</commandLine>
+        </ccTool>
+        <linkerTool>
+          <output>${TESTDIR}/TestFiles/f4</output>
+          <linkerLibItems>
+            <linkerOptionItem>`cppunit-config --libs`</linkerOptionItem>
+          </linkerLibItems>
+        </linkerTool>
+      </folder>
       <item path="main.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="tests/MemoryManagerTest.cpp" ex="false" tool="1" flavor2="0">
@@ -704,6 +746,12 @@
       <item path="tests/MemoryManagerTest.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="tests/MemoryManagerTestRunner.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="tests/NRUTest.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="tests/NRUTest.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="tests/NRUTestRunner.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="tests/PageTableTest.cpp" ex="false" tool="1" flavor2="0">
       </item>

@@ -22,8 +22,9 @@ typedef HW_MMU::PhysicalAddress PhysicalAddress;
 class PageTable {
 public:
     PageTable(PhysicalAddress baseAddress, int pageCount);
-    Information getPageFrame(int pageNumber);
-    void setPageEntry(int pageNumber, int pageFrame, int M, int R, const Page& page);
+    Information getPageEntry(int pageNumber);
+    void setPageEntry(int pageNumber, int pageFrame, int M, int R, const Page& page, bool isValid = true);
+    void setPageEntry(int pageNumber, int pageFrame, int M, int R, bool isReadable, bool isWritable, bool isExecutable, bool isValid = true);
     PageTable(const PageTable& orig);
     void setM(int pageNumber);
     void setR(int pageNumber, int R);

@@ -31,16 +31,20 @@ PageTable::PageTable(PhysicalAddress baseAddress, int pageCount) {
     }
 }
 
-Information PageTable::getPageFrame(int pageNumber) {
+Information PageTable::getPageEntry(int pageNumber) {
     PhysicalAddress pageEntryAddress = baseAddress - pageNumber;
     return HW_Machine::RAM()->read(pageEntryAddress);
 }
 
-void PageTable::setPageEntry(int pageNumber, int pageFrame, int M, int R, const Page& page) {
-    Information pageEntry = (1 << HW_MMU_Paging::off_vality) +
-                          (page.isIsReadable() << HW_MMU_Paging::off_read) +
-                          (page.isIsWritable() << HW_MMU_Paging::off_write) +
-                          (page.isIsExecutable() << HW_MMU_Paging::off_exec) +
+void PageTable::setPageEntry(int pageNumber, int pageFrame, int M, int R, const Page& page, bool isValid) {
+    setPageEntry(pageNumber, pageFrame, M, R, page.isIsReadable(), page.isIsWritable(), page.isIsExecutable(), isValid);
+}
+
+void PageTable::setPageEntry(int pageNumber, int pageFrame, int M, int R, bool isReadable, bool isWritable, bool isExecutable, bool isValid) {
+    Information pageEntry = (isValid << HW_MMU_Paging::off_vality) +
+                          (isReadable << HW_MMU_Paging::off_read) +
+                          (isWritable << HW_MMU_Paging::off_write) +
+                          (isExecutable << HW_MMU_Paging::off_exec) +
                           (M << HW_MMU_Paging::off_M) + 
                           (R << HW_MMU_Paging::off_R) +
                           (pageFrame << HW_MMU_Paging::off_Frame);
@@ -48,12 +52,12 @@ void PageTable::setPageEntry(int pageNumber, int pageFrame, int M, int R, const 
 }
 
 void PageTable::setM(int pageNumber) {
-    Information newPageEntry = (1 << HW_MMU_Paging::off_M) | getPageFrame(pageNumber);
+    Information newPageEntry = (1 << HW_MMU_Paging::off_M) | getPageEntry(pageNumber);
     HW_Machine::RAM()->write(baseAddress - pageNumber, newPageEntry);
 }
 
 void PageTable::setR(int pageNumber, int R) {
-    Information newPageEntry = (R << HW_MMU_Paging::off_R) | getPageFrame(pageNumber);
+    Information newPageEntry = (R << HW_MMU_Paging::off_R) | getPageEntry(pageNumber);
     HW_Machine::RAM()->write(baseAddress - pageNumber, newPageEntry);    
 }
 

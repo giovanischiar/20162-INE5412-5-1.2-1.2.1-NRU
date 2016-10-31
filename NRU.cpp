@@ -13,6 +13,7 @@
 
 #include "NRU.h"
 
+
 NRU::NRU() {
 }
 
@@ -20,9 +21,14 @@ NRU::NRU(const NRU& orig) {
 }
 
 PageToBeReplaced NRU::findPageToBeReplaced(PageTable* pageTable) {
-    List<PageToBeReplaced> class0, class1, class2, class3;
-    for (int i = 1; i < pageTable->getPageCount() - 1; i++) {
-        Information pageEntry = pageTable->getPageFrame(i);
+    std::vector<PageToBeReplaced> class0, class1, class2, class3;
+    for (int i = 1; i < pageTable->getPageCount() - PAGETABLE_PAGE_COUNT; i++) {
+        Information pageEntry = pageTable->getPageEntry(i);
+        bool bitVality = (pageEntry & HW_MMU_Paging::mask_vality) > 0;
+        if (!bitVality) {
+            continue;
+        }
+        
         bool bitM = (pageEntry & HW_MMU_Paging::mask_M) > 0;
         bool bitR = (pageEntry & HW_MMU_Paging::mask_R) > 0;
         PhysicalAddress frameNumber = (pageEntry & HW_MMU_Paging::mask_Frame);

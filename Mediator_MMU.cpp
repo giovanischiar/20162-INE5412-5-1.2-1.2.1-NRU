@@ -23,12 +23,10 @@ MMU::MMU(unsigned int instance) {
 
     //INSERT YOUR CODE HERE
     //...
-    createPageTable(Traits<HW_MMU>::RAMsize / Traits<MemoryManager>::pageSize);
+    createPageTable(Traits<Process>::maxAddressSpace/Traits<MemoryManager>::pageSize);
 
     //Adding page entry that references the simulator application code.
-    Information pageData[PAGESIZE];
-    Page page = Page(0, pageData, true, true, true);
-    pageTable->setPageEntry(0, 0x0000, 0x0, 0x0, page);
+    pageTable->setPageEntry(0, 0x0000, 0x0, 0x0, true, true, true);
 
     HW_Machine::MMU()->writeRegister(1, NO_ADDRESS);
 }
@@ -73,7 +71,7 @@ void MMU::setReferenced(int pageNumber, int R) {
 }
 
 Information MMU::getPageFrame(int pageNumber) {
-    return pageTable->getPageFrame(pageNumber);
+    return pageTable->getPageEntry(pageNumber);
 }
 
 void MMU::cleanReferenceBits() {

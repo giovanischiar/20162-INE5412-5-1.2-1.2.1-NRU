@@ -24,6 +24,8 @@
 
 #include "ModuleInvoke_HardwareEvent.h"
 
+#include "DataMemoryChunk.h"
+
 class OperatingSystem {
 private:
 
@@ -93,6 +95,10 @@ public:
     
 private:
     static HW_MMU::Information asmm(std::string mnemonic);
+    
+    static void createSwap(); 
+    static void fillOS(DataMemoryChunk& chunk);
+    static void fillChunkData(DataMemoryChunk& chunk, int value);
 };
 
 #endif	/* SYSTEM_H */

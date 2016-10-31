@@ -16,6 +16,8 @@
 
 #include "PageReplacementAlgorithm.h"
 
+#define PAGETABLE_PAGE_COUNT 2
+
 class NRU : public PageReplacementAlgorithm {
 public:
     NRU();

@@ -27,7 +27,7 @@ class VirtualMemorySwap {
 public:
     typedef HW_MMU::Information Information;
     VirtualMemorySwap();
-    void fillSwap(List<DataMemoryChunk> chunks);
+    void fillSwap(const List<DataMemoryChunk>& chunks);
     VirtualMemorySwap(const VirtualMemorySwap& orig);
     Page getPage(LogicalAddress address);
     void writePage(int pageNumber, Information pageData[]);

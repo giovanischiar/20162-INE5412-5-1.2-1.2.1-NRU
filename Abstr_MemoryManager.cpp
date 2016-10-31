@@ -17,7 +17,7 @@
 #include <iostream>
 
 #define OS_PARTITION_SIZE (1)
-#define PAGETABLE_PARTITION (1)
+#define PAGETABLE_PARTITION (2)
 
 MemoryManager::MemoryManager() {
     _chunks = new std::list<MemoryChunk*>();
@@ -166,4 +166,9 @@ PhysicalAddress MemoryManager::getFreeAddress() {
 
     return NO_FREE_ADDRESS;
 }
+
+void MemoryManager::fillSwap(const std::list<DataMemoryChunk>& chunks) {
+    virtualSwapArea.fillSwap(chunks);
+}
+
 

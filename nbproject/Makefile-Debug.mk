@@ -91,6 +91,7 @@ TESTDIR=${CND_BUILDDIR}/${CND_CONF}/${CND_PLATFORM}/tests
 
 # Test Files
 TESTFILES= \
+	${TESTDIR}/TestFiles/f4 \
 	${TESTDIR}/TestFiles/f2 \
 	${TESTDIR}/TestFiles/f3 \
 	${TESTDIR}/TestFiles/f1
@@ -99,6 +100,8 @@ TESTFILES= \
 TESTOBJECTFILES= \
 	${TESTDIR}/tests/MemoryManagerTest.o \
 	${TESTDIR}/tests/MemoryManagerTestRunner.o \
+	${TESTDIR}/tests/NRUTest.o \
+	${TESTDIR}/tests/NRUTestRunner.o \
 	${TESTDIR}/tests/PageTableTest.o \
 	${TESTDIR}/tests/PageTableTestRunner.o \
 	${TESTDIR}/tests/VirtualMemorySwapTest.o \
@@ -385,6 +388,10 @@ ${OBJECTDIR}/main.o: main.cpp
 .build-tests-conf: .build-tests-subprojects .build-conf ${TESTFILES}
 .build-tests-subprojects:
 
+${TESTDIR}/TestFiles/f4: ${TESTDIR}/tests/NRUTest.o ${TESTDIR}/tests/NRUTestRunner.o ${OBJECTFILES:%.o=%_nomain.o}
+	${MKDIR} -p ${TESTDIR}/TestFiles
+	${LINK.cc} -o ${TESTDIR}/TestFiles/f4 $^ ${LDLIBSOPTIONS}   `cppunit-config --libs`   
+
 ${TESTDIR}/TestFiles/f2: ${TESTDIR}/tests/MemoryManagerTest.o ${TESTDIR}/tests/MemoryManagerTestRunner.o ${OBJECTFILES:%.o=%_nomain.o}
 	${MKDIR} -p ${TESTDIR}/TestFiles
 	${LINK.cc} -o ${TESTDIR}/TestFiles/f2 $^ ${LDLIBSOPTIONS}   `cppunit-config --libs`   
@@ -396,6 +403,18 @@ ${TESTDIR}/TestFiles/f3: ${TESTDIR}/tests/PageTableTest.o ${TESTDIR}/tests/PageT
 ${TESTDIR}/TestFiles/f1: ${TESTDIR}/tests/VirtualMemorySwapTest.o ${TESTDIR}/tests/newtestrunner.o ${OBJECTFILES:%.o=%_nomain.o}
 	${MKDIR} -p ${TESTDIR}/TestFiles
 	${LINK.cc} -o ${TESTDIR}/TestFiles/f1 $^ ${LDLIBSOPTIONS}   `cppunit-config --libs`   
+
+
+${TESTDIR}/tests/NRUTest.o: tests/NRUTest.cpp 
+	${MKDIR} -p ${TESTDIR}/tests
+	${RM} "$@.d"
+	$(COMPILE.cc) -g `cppunit-config --cflags` -MMD -MP -MF "$@.d" -o ${TESTDIR}/tests/NRUTest.o tests/NRUTest.cpp
+
+
+${TESTDIR}/tests/NRUTestRunner.o: tests/NRUTestRunner.cpp 
+	${MKDIR} -p ${TESTDIR}/tests
+	${RM} "$@.d"
+	$(COMPILE.cc) -g `cppunit-config --cflags` -MMD -MP -MF "$@.d" -o ${TESTDIR}/tests/NRUTestRunner.o tests/NRUTestRunner.cpp
 
 
 ${TESTDIR}/tests/MemoryManagerTest.o: tests/MemoryManagerTest.cpp 
@@ -1088,6 +1107,7 @@ ${OBJECTDIR}/main_nomain.o: ${OBJECTDIR}/main.o main.cpp
 .test-conf:
 	@if [ "${TEST}" = "" ]; \
 	then  \
+	    ${TESTDIR}/TestFiles/f4 || true; \
 	    ${TESTDIR}/TestFiles/f2 || true; \
 	    ${TESTDIR}/TestFiles/f3 || true; \
 	    ${TESTDIR}/TestFiles/f1 || true; \

@@ -44,10 +44,8 @@ void PageTableTest::testGetPageFrame() {
     PhysicalAddress baseAddress = Traits<HW_MMU>::RAMsize-1;
     int pageCount = 2;
     PageTable pageTable(baseAddress, pageCount);
-    Information data[PAGESIZE];
-    Page page(0, data, true, true, false); 
-    pageTable.setPageEntry(0, 0x1111, 0x1, 0x1, page);
-    Information info = pageTable.getPageFrame(0);
+    pageTable.setPageEntry(0, 0x1111, 0x1, 0x1, true, true, false);
+    Information info = pageTable.getPageEntry(0);
     std::cout << "info: " << info << std::endl;
     unsigned int frameNumber = (info & HW_MMU_Paging::mask_Frame);
     bool isPageInMemory = (info & HW_MMU_Paging::mask_vality) > 0;
@@ -69,9 +67,7 @@ void PageTableTest::testSetPageEntry() {
     PhysicalAddress baseAddress = Traits<HW_MMU>::RAMsize-1;
     int pageCount = 2;
     PageTable pageTable(baseAddress, pageCount);
-    Information data[PAGESIZE];
-    Page page(0, data, true, true, false); 
-    pageTable.setPageEntry(0, 0x1111, 0x1, 0x1, page);
+    pageTable.setPageEntry(0, 0x1111, 0x1, 0x1, true, true, false);
     Information info = HW_Machine::RAM()->read(baseAddress);
     std::cout << "info: " << info << std::endl;
     unsigned int frameNumber = (info & HW_MMU_Paging::mask_Frame);
@@ -89,8 +85,7 @@ void PageTableTest::testSetPageEntry() {
     CPPUNIT_ASSERT_EQUAL(true, pageM);
     CPPUNIT_ASSERT_EQUAL(true, pageR);
     
-    Page page1(0, data, false, false, true); 
-    pageTable.setPageEntry(1, 0x0102, 0x0, 0x1, page1);
+    pageTable.setPageEntry(1, 0x0102, 0x0, 0x1, false, false, true);
     Information info1 = HW_Machine::RAM()->read(baseAddress-1);
     std::cout << "info1: " << info1 << std::endl;
     unsigned int frameNumber1 = (info1 & HW_MMU_Paging::mask_Frame);

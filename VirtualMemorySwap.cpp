@@ -24,11 +24,11 @@ VirtualMemorySwap::VirtualMemorySwap() {
     swapArea = new Information[SWAPAREASIZE];
 }
 
-void VirtualMemorySwap::fillSwap(List<DataMemoryChunk> chunks) {
+void VirtualMemorySwap::fillSwap(const List<DataMemoryChunk>& chunks) {
     memset(swapArea, 0, Traits<MemoryManager>::swapAreaSize);
-    std::list<DataMemoryChunk>::iterator it;
+    std::list<DataMemoryChunk>::const_iterator it;
     int j = 0;
-    for (it = chunks.begin(); it != chunks.end(); it++) {
+    for (it = chunks.cbegin(); it != chunks.cend(); it++) {
         int size = it->getSize();
         Information* chunkArray = it->getData();
         MemoryChunk* chunk = new MemoryChunk(it->getBeginLogicalAddress(),

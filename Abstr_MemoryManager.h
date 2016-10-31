@@ -7,7 +7,7 @@
  */
 
 #ifndef MEMORYMANAGER_H
-#define	MEMORYMANAGER_H
+#define MEMORYMANAGER_H
 
 #include <limits.h> 
 #include "Abstr_MemoryChunk.h"
@@ -17,7 +17,9 @@
 
 #define NO_FREE_ADDRESS (UINT_MAX)
 
-enum PartitionType {PROCESS, FREE};
+enum PartitionType {
+    PROCESS, FREE
+};
 
 typedef struct {
     PartitionType type;
@@ -37,9 +39,12 @@ public: // do not change
     void showMemory();
     unsigned int getNumMemoryChunks();
     MemoryChunk* getMemoryChunk(unsigned int index);
+
+    //Test methods
+    void fillSwap(const List<DataMemoryChunk>& chunks);
 private: // do not change
     std::list<MemoryChunk*>* _chunks;
-    
+
 private: // private attributes and methods
     List<MemoryPartition> partitions;
     VirtualMemorySwap virtualSwapArea;
@@ -50,5 +55,5 @@ public:
     const std::list<MemoryPartition>& getPartitions() const;
 };
 
-#endif	/* MEMORYMANAGER_H */
+#endif /* MEMORYMANAGER_H */
 
