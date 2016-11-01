@@ -6,13 +6,33 @@
  */
 
 #include "Simul_Statistics.h"
+#include "Simul_Debug.h"
 
-Statistics::Statistics() {
+void Statistics::clearStatistics() {
+    countPagesReplaced = 0;
+    countPageFault = 0;
+    countPageHit = 0;
 }
 
-Statistics::Statistics(const Statistics& orig) {
+void Statistics::incrementPageFault() {
+    Debug::cout(Debug::Level::trace, "Page Fault!");
+    ++countPageFault;
 }
 
-Statistics::~Statistics() {
+void Statistics::incrementPageHit() {
+    Debug::cout(Debug::Level::trace, "Page Hit!");
+    ++countPageHit;
 }
 
+void Statistics::incrementPagesReplaced() {
+    Debug::cout(Debug::Level::trace, "Page Replaced!");
+    ++countPagesReplaced;
+}
+
+float Statistics::pageFaultRate() const {
+    return ((float) countPageFault) / (countPageFault + countPageHit);
+}
+
+int Statistics::pagesReplaced() const {
+    return countPagesReplaced;
+}

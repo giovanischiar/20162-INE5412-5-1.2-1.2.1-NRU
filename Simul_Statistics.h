@@ -6,16 +6,39 @@
  */
 
 #ifndef STATISTICS_H
-#define	STATISTICS_H
+#define STATISTICS_H
 
 class Statistics {
 public:
-    Statistics();
-    Statistics(const Statistics& orig);
-    virtual ~Statistics();
+
+    static Statistics& getInstance() {
+        static Statistics instance;
+        return instance;
+    }
 private:
 
+    Statistics() {
+        clearStatistics();
+    }
+
+public:
+    Statistics(Statistics const&) = delete;
+    void operator=(Statistics const&) = delete;
+
+    void clearStatistics();
+
+    void incrementPagesReplaced();
+    int pagesReplaced() const;
+
+    void incrementPageFault();
+    void incrementPageHit();
+    float pageFaultRate() const;
+
+private:
+    int countPagesReplaced;
+    int countPageFault;
+    int countPageHit;
 };
 
-#endif	/* STATISTICS_H */
+#endif /* STATISTICS_H */
 

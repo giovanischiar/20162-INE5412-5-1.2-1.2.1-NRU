@@ -19,6 +19,8 @@
 #include "Mediator_MMU.h"
 #include "OperatingSystem.h"
 
+#include "Simul_Statistics.h"
+
 HW_MMU_Paging::HW_MMU_Paging() {
     // INSERT YOUR CODE HERE
     // ...
@@ -85,6 +87,8 @@ HW_MMU::PhysicalAddress HW_MMU_Paging::translateAddress(HW_MMU::LogicalAddress l
     bool isPageInMemory = (pageEntry & HW_MMU_Paging::mask_vality) > 0;
 
     if (!isPageInMemory) { // page fault
+        Statistics::getInstance().incrementPageFault();
+
         this->writeRegister(LOGICAL_ADDRESS_MISSED_REGISTER, logical);
         this->writeRegister(LAST_ACCESS_PAGE_FAULT, true);
         this->writeRegister(LAST_PAGE_FAULT_HANDLED, false); //page fault hasn't been handled yet
@@ -109,6 +113,8 @@ HW_MMU::PhysicalAddress HW_MMU_Paging::translateAddress(HW_MMU::LogicalAddress l
         return NO_ADDRESS;
     }
 
+    Statistics::getInstance().incrementPageHit();
+    
     OperatingSystem::MMU_Mediator()->setReferenced(logicalPageNumber, 0x1);
     if (operation == Operation::Write) OperatingSystem::MMU_Mediator()->setModified(logicalPageNumber);
     PhysicalAddress phys = (frameNumber << HW_MMU_Paging::off_LogicalPage) + logicalPageOffset;

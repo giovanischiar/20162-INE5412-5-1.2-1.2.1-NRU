@@ -102,6 +102,8 @@ public:
 private:
     static HW_MMU::Information asmm(std::string mnemonic);
     
+    static void PrintStatistics();
+    
     static TestApplication* testApplication;
     static int currentMemoryAccess;
 

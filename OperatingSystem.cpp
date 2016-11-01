@@ -14,6 +14,8 @@
 #include "Simulator.h"
 #include "DataMemoryChunk.h"
 
+#include "Simul_Statistics.h"
+
 const int CREATED = 0;
 const int EXECUTING = 1;
 const int FINISHED = 2;
@@ -123,10 +125,20 @@ void OperatingSystem::ExecuteTestCode() {
             Debug::cout(Debug::Level::trace, "Finished Test Application");
             delete testApplication;
             testApplication = nullptr;
+            OperatingSystem::PrintStatistics();
             simulator->getModel()->setTerminatingCondition("1");
             break;
         }
     }
+}
+
+void OperatingSystem::PrintStatistics() {
+    Debug::cout(Debug::Level::trace, "-- Statistics --");
+    float rate = Statistics::getInstance().pageFaultRate();
+    std::string percentage = std::to_string(rate * 100) + "%";
+    Debug::cout(Debug::Level::trace, "Page Fault Rate: " + std::to_string(rate) + " (" + percentage + ")");
+    std::string pagesReplaced = std::to_string(Statistics::getInstance().pagesReplaced());
+    Debug::cout(Debug::Level::trace, "Amount of Pages Replaced: " + pagesReplaced);
 }
 
 /*
