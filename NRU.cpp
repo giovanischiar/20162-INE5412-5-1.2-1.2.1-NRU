@@ -12,7 +12,7 @@
  */
 
 #include "NRU.h"
-
+#include "Simul_Statistics.h"
 
 NRU::NRU() {
 }
@@ -28,7 +28,7 @@ PageToBeReplaced NRU::findPageToBeReplaced(PageTable* pageTable) {
         if (!bitVality) {
             continue;
         }
-        
+
         bool bitM = (pageEntry & HW_MMU_Paging::mask_M) > 0;
         bool bitR = (pageEntry & HW_MMU_Paging::mask_R) > 0;
         PhysicalAddress frameNumber = (pageEntry & HW_MMU_Paging::mask_Frame);
@@ -50,15 +50,19 @@ PageToBeReplaced NRU::findPageToBeReplaced(PageTable* pageTable) {
     }
 
     if (!class0.empty()) {
+        Statistics::getInstance().incrementPagesReplaced(0);
         return class0.front();
     }
     if (!class1.empty()) {
+        Statistics::getInstance().incrementPagesReplaced(1);
         return class1.front();
     }
     if (!class2.empty()) {
+        Statistics::getInstance().incrementPagesReplaced(2);
         return class2.front();
     }
 
+    Statistics::getInstance().incrementPagesReplaced(3);
     return class3.front();
 }
 

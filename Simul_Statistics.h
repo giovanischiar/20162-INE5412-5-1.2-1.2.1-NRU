@@ -27,15 +27,15 @@ public:
 
     void clearStatistics();
 
-    void incrementPagesReplaced();
-    int pagesReplaced() const;
+    void incrementPagesReplaced(int pageClass);
+    int pagesReplacedFromClass(int pageClass) const;
 
     void incrementPageFault();
     void incrementPageHit();
     float pageFaultRate() const;
 
 private:
-    int countPagesReplaced;
+    int countPagesReplaced[4];
     int countPageFault;
     int countPageHit;
 };

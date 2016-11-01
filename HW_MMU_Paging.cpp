@@ -113,8 +113,10 @@ HW_MMU::PhysicalAddress HW_MMU_Paging::translateAddress(HW_MMU::LogicalAddress l
         return NO_ADDRESS;
     }
 
-    Statistics::getInstance().incrementPageHit();
-    
+    if (logicalPageNumber > 0) { //not counting OS memory accesses as a hit
+        Statistics::getInstance().incrementPageHit();
+    }
+
     OperatingSystem::MMU_Mediator()->setReferenced(logicalPageNumber, 0x1);
     if (operation == Operation::Write) OperatingSystem::MMU_Mediator()->setModified(logicalPageNumber);
     PhysicalAddress phys = (frameNumber << HW_MMU_Paging::off_LogicalPage) + logicalPageOffset;

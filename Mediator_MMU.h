@@ -37,7 +37,7 @@ public:
     bool hasPageFault() const;
     bool handledLastPageFault() const;
     bool hasProtectionError() const;
-    void cleanReferenceBits();
+    void clearReferenceBits();
     PageToBeReplaced findPageToBeReplaced();
     // INSERT YOUR CODE HERE
     // (Methods to set MMU registers)

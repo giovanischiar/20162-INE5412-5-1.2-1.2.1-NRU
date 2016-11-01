@@ -89,7 +89,7 @@ bool MMU::hasProtectionError() const {
     return HW_Machine::MMU()->readRegister(LAST_ACCESS_PROTECTION_ERROR);
 }
 
-void MMU::cleanReferenceBits() {
+void MMU::clearReferenceBits() {
     //queremos ignorar a entrada da página do "SO"
     for (int i = 1; i < (Traits<HW_MMU>::RAMsize / Traits<MemoryManager>::pageSize); i++) {
         setReferenced(i, 0x0);

@@ -59,6 +59,11 @@ void OperatingSystem::ExecuteTestCode() {
     Entity* entity = simulator->getEntity();
     int executionStep = std::stoi(entity->getAttribute("ExecutionStep")->getValue());
 
+    bool shouldClearReferenceBits = (currentMemoryAccess % Traits<MemoryManager>::clearReferenceBitsInterval) == 0;
+    if (shouldClearReferenceBits) {
+        OperatingSystem::MMU_Mediator()->clearReferenceBits();
+    }
+    
     switch (executionStep) {
         case CREATED: // ExecutionState is initialized with 0 (CREATED)
         {
@@ -137,8 +142,14 @@ void OperatingSystem::PrintStatistics() {
     float rate = Statistics::getInstance().pageFaultRate();
     std::string percentage = std::to_string(rate * 100) + "%";
     Debug::cout(Debug::Level::trace, "Page Fault Rate: " + std::to_string(rate) + " (" + percentage + ")");
-    std::string pagesReplaced = std::to_string(Statistics::getInstance().pagesReplaced());
-    Debug::cout(Debug::Level::trace, "Amount of Pages Replaced: " + pagesReplaced);
+    std::string pagesReplaced0 = std::to_string(Statistics::getInstance().pagesReplacedFromClass(0));
+    Debug::cout(Debug::Level::trace, "Amount of Pages Replaced From Class 0: " + pagesReplaced0);
+    std::string pagesReplaced1 = std::to_string(Statistics::getInstance().pagesReplacedFromClass(1));
+    Debug::cout(Debug::Level::trace, "Amount of Pages Replaced From Class 1: " + pagesReplaced1);
+    std::string pagesReplaced2 = std::to_string(Statistics::getInstance().pagesReplacedFromClass(2));
+    Debug::cout(Debug::Level::trace, "Amount of Pages Replaced From Class 2: " + pagesReplaced2);
+    std::string pagesReplaced3 = std::to_string(Statistics::getInstance().pagesReplacedFromClass(3));
+    Debug::cout(Debug::Level::trace, "Amount of Pages Replaced From Class 3: " + pagesReplaced3);
 }
 
 /*

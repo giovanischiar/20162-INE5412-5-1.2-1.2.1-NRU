@@ -16,8 +16,6 @@
 
 #include <iostream>
 
-#include "Simul_Statistics.h"
-
 MemoryManager::MemoryManager() {
     _chunks = new std::list<MemoryChunk*>();
     MemoryPartition partition;
@@ -96,7 +94,6 @@ void MemoryManager::handlePageFault(LogicalAddress missedAddress) {
             }
             virtualSwapArea.writePage(pageToBeReplaced.pageNumber, pageData);
         }
-        Statistics::getInstance().incrementPagesReplaced();
     }
     for (int i = 0; i < PAGESIZE_IN_WORDS; i++) {
         HW_Machine::RAM()->write(baseAddress + i, missedPage.getData()[i]);

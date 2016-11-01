@@ -7,9 +7,10 @@
 
 #include "Simul_Statistics.h"
 #include "Simul_Debug.h"
+#include <cstring>
 
 void Statistics::clearStatistics() {
-    countPagesReplaced = 0;
+    memset(countPagesReplaced, 0, 4);
     countPageFault = 0;
     countPageHit = 0;
 }
@@ -24,15 +25,15 @@ void Statistics::incrementPageHit() {
     ++countPageHit;
 }
 
-void Statistics::incrementPagesReplaced() {
-    Debug::cout(Debug::Level::trace, "Page Replaced!");
-    ++countPagesReplaced;
+void Statistics::incrementPagesReplaced(int pageClass) {
+    Debug::cout(Debug::Level::trace, "Page Replaced from Class " + std::to_string(pageClass) + "!");
+    ++countPagesReplaced[pageClass];
 }
 
 float Statistics::pageFaultRate() const {
     return ((float) countPageFault) / (countPageFault + countPageHit);
 }
 
-int Statistics::pagesReplaced() const {
-    return countPagesReplaced;
+int Statistics::pagesReplacedFromClass(int pageClass) const {
+    return countPagesReplaced[pageClass];
 }
