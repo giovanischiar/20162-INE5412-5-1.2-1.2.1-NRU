@@ -55,7 +55,6 @@ void OperatingSystem::ExecuteTestCode() {
     Debug::cout(Debug::Level::trace, "OperatingSystem::ExecuteTestCode()");
     Simulator* simulator = Simulator::getInstance();
     Entity* entity = simulator->getEntity();
-    Module* module = simulator->getModule();
     int executionStep = std::stoi(entity->getAttribute("ExecutionStep")->getValue());
 
     switch (executionStep) {
@@ -124,6 +123,7 @@ void OperatingSystem::ExecuteTestCode() {
             Debug::cout(Debug::Level::trace, "Finished Test Application");
             delete testApplication;
             testApplication = nullptr;
+            simulator->getModel()->setTerminatingCondition("1");
             break;
         }
     }
