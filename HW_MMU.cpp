@@ -17,7 +17,7 @@
 HW_MMU::HW_MMU() {
     // INSERT YOUR CODE HERE
     // ...
-    
+
 }
 
 HW_MMU::HW_MMU(const HW_MMU& orig) {
@@ -26,23 +26,23 @@ HW_MMU::HW_MMU(const HW_MMU& orig) {
 HW_MMU::~HW_MMU() {
 }
 
-HW_MMU::PhysicalAddress HW_MMU::translateAddress(LogicalAddress logical, Operation operation){
+HW_MMU::PhysicalAddress HW_MMU::translateAddress(LogicalAddress logical, Operation operation) {
     PhysicalAddress physical;
     // Translate logical into physical address
     // INSERT YOUR CODE HERE
     // ...
     physical = logical; // immediate address translation  
-    
+
     return physical;
 }
 
- HW_MMU::Register HW_MMU::readRegister(unsigned int registerNum) {
-     
- }
- void HW_MMU::writeRegister(unsigned int registerNum, HW_MMU::Register value) {
-     
- }
+HW_MMU::Register HW_MMU::readRegister(unsigned int registerNum) {
 
+}
+
+void HW_MMU::writeRegister(unsigned int registerNum, HW_MMU::Register value) {
+
+}
 
 HW_MMU::Information HW_MMU::readMemory(HW_MMU::LogicalAddress address) {
     PhysicalAddress phys = translateAddress(address, Operation::Read);

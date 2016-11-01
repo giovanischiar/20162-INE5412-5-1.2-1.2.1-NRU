@@ -28,8 +28,8 @@ public:
     HW_MMU(const HW_MMU& orig);
     virtual ~HW_MMU();
 public:
-    Information readMemory(LogicalAddress address);
-    void writeMemory(LogicalAddress address, Information data);
+    virtual Information readMemory(LogicalAddress address);
+    virtual void writeMemory(LogicalAddress address, Information data);
     virtual Register readRegister(unsigned int registerNum);
     virtual void writeRegister(unsigned int registerNum, Register value);
 protected:

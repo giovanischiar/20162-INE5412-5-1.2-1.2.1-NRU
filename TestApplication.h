@@ -17,19 +17,21 @@
 #include "HW_MMU.h"
 #include "DataMemoryChunk.h"
 
-#define INITIAL_ARRAY_ADDRESS 32
+#define INITIAL_ARRAY_ADDRESS   24
+#define STARTUP_SECTION_SIZE    PAGESIZE_IN_WORDS
 
 typedef HW_MMU::Operation Operation;
 
 struct MemoryAccess {
 
     MemoryAccess(LogicalAddress addr, Operation op) {
-        this->addr = addr;
+        this->addr = STARTUP_SECTION_SIZE + addr;
         this->op = op;
+        this->valueToWrite = 0;
     }
 
     MemoryAccess(LogicalAddress addr, Operation op, Information valueToWrite) {
-        this->addr = addr;
+        this->addr = STARTUP_SECTION_SIZE + addr;
         this->op = op;
         this->valueToWrite = valueToWrite;
     }
@@ -37,7 +39,7 @@ struct MemoryAccess {
     MemoryAccess(const MemoryAccess& orig) {
         this->addr = orig.addr;
         this->op = orig.op;
-        this->valueToWrite = valueToWrite;
+        this->valueToWrite = orig.valueToWrite;
     }
     LogicalAddress addr;
     Operation op;

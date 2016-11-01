@@ -34,6 +34,9 @@ public:
     void setModified(int pageNumber);
     void setReferenced(int pageNumber, int R);
     Information getPageFrame(int pageNumber);
+    bool hasPageFault() const;
+    bool handledLastPageFault() const;
+    bool hasProtectionError() const;
     void cleanReferenceBits();
     PageToBeReplaced findPageToBeReplaced();
     // INSERT YOUR CODE HERE

@@ -37,7 +37,6 @@ addi $t3, $t3, 224 #bytes, array de 56 posições
 slt $t5, $t0, $t3
 beq $t5, $zero, loop
  */
-
 TestApplication::TestApplication() {
     createAddressSpace();
     generateMemoryReferences();
@@ -65,7 +64,7 @@ void TestApplication::createAddressSpace() {
     addressSpaceChunks.push_back(chunk2);
 
     DataMemoryChunk chunk3 = DataMemoryChunk(3 * PAGESIZE_IN_WORDS, false, true, false);
-    fillChunkData(chunk3, 108);
+    fillChunkData(chunk3, 32);
     addressSpaceChunks.push_back(chunk3);
 
     DataMemoryChunk chunk4 = DataMemoryChunk(4 * PAGESIZE_IN_WORDS, false, true, true);
@@ -133,7 +132,7 @@ void TestApplication::fillChunkData(DataMemoryChunk& chunk, int value) {
     chunk.setData(info);
 }
 
-void TestApplication::generateMemoryReferences() {
+void TestApplication::generateMemoryReferences() {    
     memoryReferences.push_back(MemoryAccess(0, Operation::Read));
     memoryReferences.push_back(MemoryAccess(16, Operation::Read)); // la $s0, FIRST_ARRAY_ELEMENT
     memoryReferences.push_back(MemoryAccess(1, Operation::Read)); // add $s1, $s1, $zero

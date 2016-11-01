@@ -70,20 +70,53 @@ void OperatingSystem::ExecuteTestCode() {
         }
         case EXECUTING:
         {
+            if (OperatingSystem::MMU_Mediator()->hasPageFault() &&
+                    !OperatingSystem::MMU_Mediator()->handledLastPageFault()) {
+                break;
+            }
+
             if (currentMemoryAccess >= testApplication->getMemoryReferences().size()) {
                 entity->getAttribute("ExecutionStep")->setValue(std::to_string(++executionStep)); // advance execution step;
                 break;
             }
 
             const MemoryAccess& memoryAccess = testApplication->getMemoryReferences().at(currentMemoryAccess);
-            if (memoryAccess.op == Operation::Read) {
-                Information value = HW_Machine::MMU()->readMemory(memoryAccess.addr);
-                Debug::cout(Debug::Level::trace, "Reading RAM[" + std::to_string(memoryAccess.addr) + "] = " + std::to_string(value));
-            } else {
-                HW_Machine::MMU()->writeMemory(memoryAccess.addr, memoryAccess.valueToWrite);
-                Debug::cout(Debug::Level::trace, "Writing " + std::to_string(memoryAccess.valueToWrite) + " to RAM[" + std::to_string(memoryAccess.addr) + "]");
+            switch (memoryAccess.op) {
+                case Operation::Read:
+                {
+                    Information value = HW_Machine::MMU()->readMemory(memoryAccess.addr);
+                    if (OperatingSystem::MMU_Mediator()->hasProtectionError()) {
+                        Debug::cout(Debug::Level::error, "Protection Error! Was Trying to Read RAM[" + std::to_string(memoryAccess.addr) + "]");
+                        entity->getAttribute("ExecutionStep")->setValue(std::to_string(++executionStep)); // advance execution step;
+                        break;
+                    }
+
+                    if (OperatingSystem::MMU_Mediator()->hasPageFault()) {
+                        Debug::cout(Debug::Level::warning, "Page Fault! Was Trying to Read RAM[" + std::to_string(memoryAccess.addr) + "]");
+                    } else {
+                        Debug::cout(Debug::Level::trace, "Reading RAM[" + std::to_string(memoryAccess.addr) + "] = " + std::to_string(value));
+                        currentMemoryAccess++;
+                    }
+                    break;
+                }
+                case Operation::Write:
+                {
+                    HW_Machine::MMU()->writeMemory(memoryAccess.addr, memoryAccess.valueToWrite);
+                    if (OperatingSystem::MMU_Mediator()->hasProtectionError()) {
+                        Debug::cout(Debug::Level::error, "Protection Error! Was Trying to Write to RAM[" + std::to_string(memoryAccess.addr) + "]");
+                        entity->getAttribute("ExecutionStep")->setValue(std::to_string(++executionStep)); // advance execution step;
+                        break;
+                    }
+
+                    if (OperatingSystem::MMU_Mediator()->hasPageFault()) {
+                        Debug::cout(Debug::Level::warning, "Page Fault! Was Trying to Write to RAM[" + std::to_string(memoryAccess.addr) + "]");
+                    } else {
+                        Debug::cout(Debug::Level::trace, "Writing " + std::to_string(memoryAccess.valueToWrite) + " to RAM[" + std::to_string(memoryAccess.addr) + "]");
+                        currentMemoryAccess++;
+                    }
+                    break;
+                }
             }
-            currentMemoryAccess++;
             break;
         }
         case FINISHED:

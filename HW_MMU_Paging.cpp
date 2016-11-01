@@ -48,6 +48,12 @@ HW_MMU::Register HW_MMU_Paging::readRegister(unsigned int registerNum) {
     switch (registerNum) {
         case LOGICAL_ADDRESS_MISSED_REGISTER:
             return this->_logicalAddressMissed;
+        case LAST_ACCESS_PAGE_FAULT:
+            return this->_lastAccessPageFault;
+        case LAST_PAGE_FAULT_HANDLED:
+            return this->_lastAccessPageFault;
+        case LAST_ACCESS_PROTECTION_ERROR:
+            return this->_lastAccessProtectionError;
         default:
             return 0;
     }
@@ -57,6 +63,15 @@ void HW_MMU_Paging::writeRegister(unsigned int registerNum, HW_MMU::Register val
     switch (registerNum) {
         case LOGICAL_ADDRESS_MISSED_REGISTER:
             this->_logicalAddressMissed = value;
+            break;
+        case LAST_ACCESS_PAGE_FAULT:
+            this->_lastAccessPageFault = value;
+            break;
+        case LAST_PAGE_FAULT_HANDLED:
+            this->_lastPageFaultHandled = value;
+            break;
+        case LAST_ACCESS_PROTECTION_ERROR:
+            this->_lastAccessProtectionError = value;
             break;
     }
 }
@@ -71,28 +86,55 @@ HW_MMU::PhysicalAddress HW_MMU_Paging::translateAddress(HW_MMU::LogicalAddress l
 
     if (!isPageInMemory) { // page fault
         this->writeRegister(LOGICAL_ADDRESS_MISSED_REGISTER, logical);
+        this->writeRegister(LAST_ACCESS_PAGE_FAULT, true);
+        this->writeRegister(LAST_PAGE_FAULT_HANDLED, false); //page fault hasn't been handled yet
         // schedule an event to notify that a page fault just happened
         Simulator* simulator = Simulator::getInstance();
         Entity* entity = simulator->getEntity();
         entity->getAttribute("MethodName")->setValue("MMU::chunk_fault_interrupt_handler()");
         simulator->insertEvent(simulator->getTnow(), HW_Machine::Module_HardwareEvent(), entity);
-        return;
+        return NO_ADDRESS;
     }
 
     bool hasProtectionError = (!(pageEntry & HW_MMU_Paging::mask_read) && (operation == Operation::Read));
     hasProtectionError |= (!(pageEntry & HW_MMU_Paging::mask_write) && (operation == Operation::Write));
 
     if (hasProtectionError) {
+        this->writeRegister(LAST_ACCESS_PROTECTION_ERROR, true);
         // schedule an event to notify that a protection error just happened
         Simulator* simulator = Simulator::getInstance();
         Entity* entity = simulator->getEntity();
         entity->getAttribute("MethodName")->setValue("MMU::protection_error_interrupt_handler()");
         simulator->insertEvent(simulator->getTnow(), HW_Machine::Module_HardwareEvent(), entity);
-        return;
+        return NO_ADDRESS;
     }
 
     OperatingSystem::MMU_Mediator()->setReferenced(logicalPageNumber, 0x1);
     if (operation == Operation::Write) OperatingSystem::MMU_Mediator()->setModified(logicalPageNumber);
     PhysicalAddress phys = (frameNumber << HW_MMU_Paging::off_LogicalPage) + logicalPageOffset;
     return phys;
+}
+
+HW_MMU::Information HW_MMU_Paging::readMemory(HW_MMU::LogicalAddress address) {
+    writeRegister(LAST_ACCESS_PAGE_FAULT, false);
+    writeRegister(LAST_ACCESS_PROTECTION_ERROR, false);
+
+    PhysicalAddress phys = translateAddress(address, Operation::Read);
+    if (phys == NO_ADDRESS) {
+        return 0;
+    }
+
+    return HW_Machine::RAM()->read(phys);
+}
+
+void HW_MMU_Paging::writeMemory(HW_MMU::LogicalAddress address, HW_MMU::Information data) {
+    writeRegister(LAST_ACCESS_PAGE_FAULT, false);
+    writeRegister(LAST_ACCESS_PROTECTION_ERROR, false);
+
+    PhysicalAddress phys = translateAddress(address, Operation::Write);
+    if (phys == NO_ADDRESS) {
+        return;
+    }
+
+    HW_Machine::RAM()->write(phys, data);
 }
