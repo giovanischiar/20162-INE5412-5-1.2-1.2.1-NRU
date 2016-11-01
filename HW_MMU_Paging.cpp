@@ -132,7 +132,12 @@ HW_MMU::Information HW_MMU_Paging::readMemory(HW_MMU::LogicalAddress address) {
         return 0;
     }
 
-    return HW_Machine::RAM()->read(phys);
+    Information value = HW_Machine::RAM()->read(phys);
+    unsigned int logicalPageNumber = (address & HW_MMU_Paging::mask_LogicalPage) >> HW_MMU_Paging::off_LogicalPage;
+    if (logicalPageNumber > 0) {
+        Debug::cout(Debug::Level::trace, "Reading Logical Address[" + std::to_string(address) + "] mapped to RAM[" + std::to_string(phys) + "] = " + std::to_string(value));
+    }
+    return value;
 }
 
 void HW_MMU_Paging::writeMemory(HW_MMU::LogicalAddress address, HW_MMU::Information data) {
@@ -144,5 +149,9 @@ void HW_MMU_Paging::writeMemory(HW_MMU::LogicalAddress address, HW_MMU::Informat
         return;
     }
 
+    unsigned int logicalPageNumber = (address & HW_MMU_Paging::mask_LogicalPage) >> HW_MMU_Paging::off_LogicalPage;
+    if (logicalPageNumber > 0) {
+        Debug::cout(Debug::Level::trace, "Writing " + std::to_string(data) + " to Logical Address[" + std::to_string(address) + "] mapped to RAM[" + std::to_string(phys) + "]");
+    }
     HW_Machine::RAM()->write(phys, data);
 }

@@ -17,6 +17,8 @@
 #include "OperatingSystem.h"
 #include "Traits.h"
 #include "NRU.h"
+#include "Simulator.h"
+#include "Simul_Statistics.h"
 
 MMU::MMU(unsigned int instance) {
     _instance = instance;
@@ -53,6 +55,7 @@ void MMU::protection_error_interrupt_handler() {
 }
 
 void MMU::chunk_fault_interrupt_handler() {
+    Statistics::getInstance().startHandlingPageFault();
     HW_MMU::LogicalAddress logicalAddressMissed = HW_Machine::MMU()->readRegister(1);
     OperatingSystem::Memory_Manager()->handlePageFault(logicalAddressMissed);
 }
@@ -63,6 +66,7 @@ void MMU::updatePageTable(LogicalAddress missedAddress, PhysicalAddress baseAddr
     pageTable->setPageEntry(pageNumber, pageFrame, 0x0, 0x1, page);
     HW_Machine::MMU()->writeRegister(LOGICAL_ADDRESS_MISSED_REGISTER, NO_ADDRESS);
     HW_Machine::MMU()->writeRegister(LAST_PAGE_FAULT_HANDLED, true);
+    Statistics::getInstance().endHandlingPageFault();
 }
 
 void MMU::setModified(int pageNumber) {
@@ -71,6 +75,10 @@ void MMU::setModified(int pageNumber) {
 
 void MMU::setReferenced(int pageNumber, int R) {
     pageTable->setR(pageNumber, R);
+}
+
+void MMU::setInvalid(int pageNumber) {
+    pageTable->setVality(pageNumber, 0);
 }
 
 Information MMU::getPageFrame(int pageNumber) {

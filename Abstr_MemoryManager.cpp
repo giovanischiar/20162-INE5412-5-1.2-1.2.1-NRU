@@ -13,11 +13,11 @@
 #include "Traits.h"
 #include "HW_Machine.h"
 #include "OperatingSystem.h"
+#include "Simul_Statistics.h"
 
 #include <iostream>
 
 MemoryManager::MemoryManager() {
-    _chunks = new std::list<MemoryChunk*>();
     MemoryPartition partition;
     partition.type = FREE;
     partition.baseAddress = PAGESIZE_IN_WORDS;
@@ -49,9 +49,13 @@ void MemoryManager::deallocateMemory(MemoryChunk* chunk) {
 }
 
 unsigned int MemoryManager::getNumMemoryChunks() {
-    // INSERT YOUR CODE TO RETURN THE QUANTITY OF ALLOCATED PARTITIONS
-    // ...
-    return 0; //_chunks->size();
+    int count = 0;
+    for (auto it = partitions.cbegin(); it != partitions.cend(); ++it) {
+        if (it->type == PROCESS) {
+            count++;
+        }
+    }
+    return count;
 }
 
 MemoryChunk* MemoryManager::getMemoryChunk(unsigned int index) {
@@ -76,15 +80,22 @@ void MemoryManager::showMemory() {
      */
     //std::cout << "Memory Map:" << std::endl;
 
-    // INSERT YOUR CODE TO SHOW THE MEMORY MAP
-    // ...
-
+    Debug::cout(Debug::Level::trace, "Memory Map:");
+    for (auto it = partitions.cbegin(); it != partitions.cend(); ++it) {
+        std::string beginAddress = std::to_string(it->baseAddress);
+        std::string endAddress = std::to_string(it->baseAddress + it->pageCount*PAGESIZE_IN_WORDS);
+        std::string type = it->type == FREE ? "FREE" : "ALLOCATED";
+        std::string size = std::to_string(it->pageCount*PAGESIZE_IN_WORDS);
+        std::string processID = "0";
+        Debug::cout(Debug::Level::trace, beginAddress + "-" + endAddress + ": " + type + " " + size + " " + processID);
+    }    
 }
 
 void MemoryManager::handlePageFault(LogicalAddress missedAddress) {
     Page missedPage = virtualSwapArea.getPage(missedAddress);
     PhysicalAddress baseAddress = getFreeAddress();
     if (baseAddress == NO_FREE_ADDRESS) {
+        Statistics::getInstance().startPageReplacementAlgorithm();
         PageToBeReplaced pageToBeReplaced = OperatingSystem::MMU_Mediator()->findPageToBeReplaced();
         baseAddress = pageToBeReplaced.basePhysicalAddress;
         if (pageToBeReplaced.modified) {
@@ -94,6 +105,8 @@ void MemoryManager::handlePageFault(LogicalAddress missedAddress) {
             }
             virtualSwapArea.writePage(pageToBeReplaced.pageNumber, pageData);
         }
+        OperatingSystem::MMU_Mediator()->setInvalid(pageToBeReplaced.pageNumber);
+        Statistics::getInstance().endPageReplacementAlgorithm();
     }
     for (int i = 0; i < PAGESIZE_IN_WORDS; i++) {
         HW_Machine::RAM()->write(baseAddress + i, missedPage.getData()[i]);

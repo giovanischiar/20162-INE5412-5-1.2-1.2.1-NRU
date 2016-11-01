@@ -54,16 +54,17 @@ void OperatingSystem::Init() {
 }
 
 void OperatingSystem::ExecuteTestCode() {
+    std::cout << std::endl;
     Debug::cout(Debug::Level::trace, "OperatingSystem::ExecuteTestCode()");
     Simulator* simulator = Simulator::getInstance();
     Entity* entity = simulator->getEntity();
     int executionStep = std::stoi(entity->getAttribute("ExecutionStep")->getValue());
 
-    bool shouldClearReferenceBits = (currentMemoryAccess % Traits<MemoryManager>::clearReferenceBitsInterval) == 0;
+    bool shouldClearReferenceBits = !OperatingSystem::MMU_Mediator()->hasPageFault() && (currentMemoryAccess % Traits<MemoryManager>::clearReferenceBitsInterval) == 0;
     if (shouldClearReferenceBits) {
         OperatingSystem::MMU_Mediator()->clearReferenceBits();
     }
-    
+
     switch (executionStep) {
         case CREATED: // ExecutionState is initialized with 0 (CREATED)
         {
@@ -76,8 +77,7 @@ void OperatingSystem::ExecuteTestCode() {
         }
         case EXECUTING:
         {
-            if (OperatingSystem::MMU_Mediator()->hasPageFault() &&
-                    !OperatingSystem::MMU_Mediator()->handledLastPageFault()) {
+            if (OperatingSystem::MMU_Mediator()->hasPageFault() && !OperatingSystem::MMU_Mediator()->handledLastPageFault()) {
                 break;
             }
 
@@ -92,15 +92,14 @@ void OperatingSystem::ExecuteTestCode() {
                 {
                     Information value = HW_Machine::MMU()->readMemory(memoryAccess.addr);
                     if (OperatingSystem::MMU_Mediator()->hasProtectionError()) {
-                        Debug::cout(Debug::Level::error, "Protection Error! Was Trying to Read RAM[" + std::to_string(memoryAccess.addr) + "]");
+                        Debug::cout(Debug::Level::error, "Protection Error! Was Trying to Read Logical Address[" + std::to_string(memoryAccess.addr) + "]");
                         entity->getAttribute("ExecutionStep")->setValue(std::to_string(++executionStep)); // advance execution step;
                         break;
                     }
 
                     if (OperatingSystem::MMU_Mediator()->hasPageFault()) {
-                        Debug::cout(Debug::Level::warning, "Page Fault! Was Trying to Read RAM[" + std::to_string(memoryAccess.addr) + "]");
+                        Debug::cout(Debug::Level::warning, "Page Fault! Was Trying to Read Logical Address[" + std::to_string(memoryAccess.addr) + "]");
                     } else {
-                        Debug::cout(Debug::Level::trace, "Reading RAM[" + std::to_string(memoryAccess.addr) + "] = " + std::to_string(value));
                         currentMemoryAccess++;
                     }
                     break;
@@ -109,15 +108,14 @@ void OperatingSystem::ExecuteTestCode() {
                 {
                     HW_Machine::MMU()->writeMemory(memoryAccess.addr, memoryAccess.valueToWrite);
                     if (OperatingSystem::MMU_Mediator()->hasProtectionError()) {
-                        Debug::cout(Debug::Level::error, "Protection Error! Was Trying to Write to RAM[" + std::to_string(memoryAccess.addr) + "]");
+                        Debug::cout(Debug::Level::error, "Protection Error! Was Trying to Write to Logical Address[" + std::to_string(memoryAccess.addr) + "]");
                         entity->getAttribute("ExecutionStep")->setValue(std::to_string(++executionStep)); // advance execution step;
                         break;
                     }
 
                     if (OperatingSystem::MMU_Mediator()->hasPageFault()) {
-                        Debug::cout(Debug::Level::warning, "Page Fault! Was Trying to Write to RAM[" + std::to_string(memoryAccess.addr) + "]");
+                        Debug::cout(Debug::Level::warning, "Page Fault! Was Trying to Write to Logical Address[" + std::to_string(memoryAccess.addr) + "]");
                     } else {
-                        Debug::cout(Debug::Level::trace, "Writing " + std::to_string(memoryAccess.valueToWrite) + " to RAM[" + std::to_string(memoryAccess.addr) + "]");
                         currentMemoryAccess++;
                     }
                     break;
@@ -131,6 +129,7 @@ void OperatingSystem::ExecuteTestCode() {
             delete testApplication;
             testApplication = nullptr;
             OperatingSystem::PrintStatistics();
+            OperatingSystem::Memory_Manager()->showMemory();
             simulator->getModel()->setTerminatingCondition("1");
             break;
         }
@@ -142,6 +141,7 @@ void OperatingSystem::PrintStatistics() {
     float rate = Statistics::getInstance().pageFaultRate();
     std::string percentage = std::to_string(rate * 100) + "%";
     Debug::cout(Debug::Level::trace, "Page Fault Rate: " + std::to_string(rate) + " (" + percentage + ")");
+    
     std::string pagesReplaced0 = std::to_string(Statistics::getInstance().pagesReplacedFromClass(0));
     Debug::cout(Debug::Level::trace, "Amount of Pages Replaced From Class 0: " + pagesReplaced0);
     std::string pagesReplaced1 = std::to_string(Statistics::getInstance().pagesReplacedFromClass(1));
@@ -150,6 +150,11 @@ void OperatingSystem::PrintStatistics() {
     Debug::cout(Debug::Level::trace, "Amount of Pages Replaced From Class 2: " + pagesReplaced2);
     std::string pagesReplaced3 = std::to_string(Statistics::getInstance().pagesReplacedFromClass(3));
     Debug::cout(Debug::Level::trace, "Amount of Pages Replaced From Class 3: " + pagesReplaced3);
+    
+    std::string averagePageFaultHandlingTime = std::to_string(Statistics::getInstance().averagePageFaultHandlingTime());
+    Debug::cout(Debug::Level::trace, "Average Page Fault Handling Time: " + averagePageFaultHandlingTime + " microseconds");
+    std::string averagePageReplacementTime = std::to_string(Statistics::getInstance().averagePageReplacementTime());
+    Debug::cout(Debug::Level::trace, "Average Page Replacement Time: " + averagePageReplacementTime + " microseconds");
 }
 
 /*

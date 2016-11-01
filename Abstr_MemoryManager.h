@@ -44,9 +44,6 @@ public: // do not change
 
     //Test methods
     void fillSwap(const std::vector<DataMemoryChunk>& chunks);
-private: // do not change
-    std::list<MemoryChunk*>* _chunks;
-
 private: // private attributes and methods
     List<MemoryPartition> partitions;
     VirtualMemorySwap virtualSwapArea;

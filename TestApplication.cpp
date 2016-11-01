@@ -138,7 +138,7 @@ void TestApplication::generateMemoryReferences() {
     memoryReferences.push_back(MemoryAccess(1, Operation::Read)); // add $s1, $s1, $zero
 
     int addressSpaceSize = Traits<Process>::maxAddressSpace / sizeof (Information);
-    int arraySize = addressSpaceSize - INITIAL_ARRAY_ADDRESS;
+    int arraySize = addressSpaceSize - INITIAL_ARRAY_ADDRESS - PAGESIZE_IN_WORDS;
 
     for (int i = INITIAL_ARRAY_ADDRESS; i < arraySize + INITIAL_ARRAY_ADDRESS; i++) {
         memoryReferences.push_back(MemoryAccess(2, Operation::Read)); // add $t0, $s0, $s1

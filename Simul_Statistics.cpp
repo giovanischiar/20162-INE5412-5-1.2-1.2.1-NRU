@@ -7,7 +7,9 @@
 
 #include "Simul_Statistics.h"
 #include "Simul_Debug.h"
+#include "Simulator.h"
 #include <cstring>
+#include <sys/time.h>
 
 void Statistics::clearStatistics() {
     memset(countPagesReplaced, 0, 4);
@@ -36,4 +38,43 @@ float Statistics::pageFaultRate() const {
 
 int Statistics::pagesReplacedFromClass(int pageClass) const {
     return countPagesReplaced[pageClass];
+}
+
+void Statistics::startHandlingPageFault() {
+    startPageFault = now();
+}
+
+void Statistics::endHandlingPageFault() {
+    pageFaultTimes.push_back(now() - startPageFault);
+}
+
+double Statistics::averagePageFaultHandlingTime() {
+    double sum = 0;
+    for (auto it = pageFaultTimes.cbegin(); it != pageFaultTimes.cend(); ++it) {
+        sum += *it;
+    }
+    return sum / pageFaultTimes.size();
+}
+
+void Statistics::startPageReplacementAlgorithm() {
+    startPageReplacement = now();
+}
+
+void Statistics::endPageReplacementAlgorithm() {
+    pageReplacementTimes.push_back(now() - startPageReplacement);
+}
+
+double Statistics::averagePageReplacementTime() {
+    double sum = 0;
+    for (auto it = pageReplacementTimes.cbegin(); it != pageReplacementTimes.cend(); ++it) {
+        sum += *it;
+    }
+    return sum / pageReplacementTimes.size();
+}
+
+double Statistics::now() {
+    struct timeval tp;
+    gettimeofday(&tp, NULL);
+    long int microseconds = tp.tv_sec * 1000000 + tp.tv_usec;
+    return microseconds;
 }

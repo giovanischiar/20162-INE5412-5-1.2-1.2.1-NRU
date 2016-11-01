@@ -111,7 +111,7 @@ template<> struct Traits<MemoryManager> {
     static constexpr AllocationAlgorithm allocationAlgorithm = AllocationAlgorithm::BestFit;
     static constexpr ReplacementAlgorithm replacementAlgorithm = ReplacementAlgorithm::FIFO;
     static constexpr unsigned int swapAreaSize = 512; // bytes
-    static constexpr unsigned int clearReferenceBitsInterval = 1000; //once every X memory accesses
+    static constexpr unsigned int clearReferenceBitsInterval = 25; //once every X memory accesses
 };
 
 template<> struct Traits<Scheduler<Thread>> {

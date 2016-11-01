@@ -8,6 +8,8 @@
 #ifndef STATISTICS_H
 #define STATISTICS_H
 
+#include <vector>
+
 class Statistics {
 public:
 
@@ -33,11 +35,27 @@ public:
     void incrementPageFault();
     void incrementPageHit();
     float pageFaultRate() const;
+    
+    void startHandlingPageFault();
+    void endHandlingPageFault();
+    double averagePageFaultHandlingTime();
+    
+    void startPageReplacementAlgorithm();
+    void endPageReplacementAlgorithm();
+    double averagePageReplacementTime();
 
 private:
     int countPagesReplaced[4];
     int countPageFault;
     int countPageHit;
+    
+    double startPageFault;
+    std::vector<double> pageFaultTimes;
+    
+    double startPageReplacement;
+    std::vector<double> pageReplacementTimes;
+    
+    double now();
 };
 
 #endif /* STATISTICS_H */

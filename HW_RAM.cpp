@@ -14,7 +14,6 @@
 #include "HW_RAM.h"
 #include "Traits.h"
 
-
 HW_RAM::HW_RAM() {
     //_ramMemory = new ()
 }
@@ -27,7 +26,6 @@ HW_RAM::~HW_RAM() {
 
 HW_RAM::Information HW_RAM::read(HW_RAM::PhysicalAddress address) {
     if (address < Traits<HW_MMU>::RAMsize) {
-//        Debug::cout(Debug::Level::warning, "Reading " + std::to_string(_ramMemory[address]) + " from RAM address " + std::to_string(address));
         return _ramMemory[address];
     } else {
         // error
@@ -37,7 +35,6 @@ HW_RAM::Information HW_RAM::read(HW_RAM::PhysicalAddress address) {
 }
 
 void HW_RAM::write(HW_RAM::PhysicalAddress address, HW_RAM::Information data) {
-//    Debug::cout(Debug::Level::warning, "Writing " + std::to_string(data) + " on RAM address " + std::to_string(address));
     if (address < Traits<HW_MMU>::RAMsize) {
         _ramMemory[address] = data;
     } else {

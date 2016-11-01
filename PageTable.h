@@ -28,8 +28,10 @@ public:
     PageTable(const PageTable& orig);
     void setM(int pageNumber);
     void setR(int pageNumber, int R);
+    void setVality(int pageNumber, int vality);
     virtual ~PageTable();
     int getPageCount();
+    void dump();
 private:
     PhysicalAddress baseAddress;
     int pageCount;

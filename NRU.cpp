@@ -21,6 +21,7 @@ NRU::NRU(const NRU& orig) {
 }
 
 PageToBeReplaced NRU::findPageToBeReplaced(PageTable* pageTable) {
+    pageTable->dump();
     std::vector<PageToBeReplaced> class0, class1, class2, class3;
     for (int i = 1; i < pageTable->getPageCount() - PAGETABLE_PAGE_COUNT; i++) {
         Information pageEntry = pageTable->getPageEntry(i);

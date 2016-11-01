@@ -33,6 +33,7 @@ public:
     void updatePageTable(LogicalAddress missedAddress, PhysicalAddress baseAddress, Page page);
     void setModified(int pageNumber);
     void setReferenced(int pageNumber, int R);
+    void setInvalid(int pageNumber);
     Information getPageFrame(int pageNumber);
     bool hasPageFault() const;
     bool handledLastPageFault() const;
