@@ -134,7 +134,7 @@ void HW_HardDisk::setStreamRegister(DiskSectorData _streamRegister) {
     }
 }
 
-HW_HardDisk::DiskSectorData* HW_HardDisk::getStreamRegister() const {
+HW_HardDisk::DiskSectorData const * HW_HardDisk::getStreamRegister() const {
     return &_streamRegister;
 
 }
