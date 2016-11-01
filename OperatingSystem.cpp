@@ -14,6 +14,13 @@
 #include "Simulator.h"
 #include "DataMemoryChunk.h"
 
+const int CREATED = 0;
+const int EXECUTING = 1;
+const int FINISHED = 2;
+
+TestApplication* OperatingSystem::testApplication;
+int OperatingSystem::currentMemoryAccess;
+
 void OperatingSystem::LoadApplication(Application* app, MMU::PhysicalAddress address) {
     Debug::cout(Debug::Level::trace, "OperatingSystem::LoadApplication(" + std::to_string(reinterpret_cast<unsigned long> (app)) + "," + std::to_string(address) + ")");
     std::list<Application::Information> code = app->getCode();
@@ -42,9 +49,6 @@ void OperatingSystem::Init() {
     OperatingSystem::Timer_Mediator();
 
     SetBootApplication(Application::DefaultBootApplication()); // load boot application into RAMs
-
-    //Test Setup
-    OperatingSystem::createSwap();
 }
 
 void OperatingSystem::ExecuteTestCode() {
@@ -53,134 +57,43 @@ void OperatingSystem::ExecuteTestCode() {
     Entity* entity = simulator->getEntity();
     Module* module = simulator->getModule();
     int executionStep = std::stoi(entity->getAttribute("ExecutionStep")->getValue());
-    double timeNow = simulator->getTnow();
-
-    // INSERT HERE YOUR CODE
-    // You can write a test code that will be executed and will invoke system calls or whenever you want
-    // Follow the examples...
-    // ...
 
     switch (executionStep) {
-        case 0: // ExecutionStep is initialized with 0
-            Debug::cout(Debug::Level::trace, "ExecutionStep: " + std::to_string(0));
+        case CREATED: // ExecutionState is initialized with 0 (CREATED)
+        {
+            Debug::cout(Debug::Level::trace, "Starting Test Application");
             entity->getAttribute("ExecutionStep")->setValue(std::to_string(++executionStep)); // advance execution step
-            HW_Machine::RAM()->dump();
-            std::cout << HW_Machine::MMU()->readMemory(10*PAGESIZE_IN_WORDS) << std::endl;
-
-
-
-
-
-
+            testApplication = new TestApplication();
+            OperatingSystem::Memory_Manager()->fillSwap(testApplication->getAddressSpaceChunks());
+            currentMemoryAccess = 0;
             break;
-        case 1:
-            Debug::cout(Debug::Level::trace, "ExecutionStep: " + std::to_string(1));
-            entity->getAttribute("ExecutionStep")->setValue(std::to_string(++executionStep)); // advance execution step
+        }
+        case EXECUTING:
+        {
+            if (currentMemoryAccess >= testApplication->getMemoryReferences().size()) {
+                entity->getAttribute("ExecutionStep")->setValue(std::to_string(++executionStep)); // advance execution step;
+                break;
+            }
 
-
-
-
+            const MemoryAccess& memoryAccess = testApplication->getMemoryReferences().at(currentMemoryAccess);
+            if (memoryAccess.op == Operation::Read) {
+                Information value = HW_Machine::MMU()->readMemory(memoryAccess.addr);
+                Debug::cout(Debug::Level::trace, "Reading RAM[" + std::to_string(memoryAccess.addr) + "] = " + std::to_string(value));
+            } else {
+                HW_Machine::MMU()->writeMemory(memoryAccess.addr, memoryAccess.valueToWrite);
+                Debug::cout(Debug::Level::trace, "Writing " + std::to_string(memoryAccess.valueToWrite) + " to RAM[" + std::to_string(memoryAccess.addr) + "]");
+            }
+            currentMemoryAccess++;
             break;
-        case 2:
-            Debug::cout(Debug::Level::trace, "ExecutionStep: " + std::to_string(2));
-            entity->getAttribute("ExecutionStep")->setValue(std::to_string(++executionStep)); // advance execution step
-
-
-
+        }
+        case FINISHED:
+        {
+            Debug::cout(Debug::Level::trace, "Finished Test Application");
+            delete testApplication;
+            testApplication = nullptr;
             break;
-        case 3:
-            Debug::cout(Debug::Level::trace, "ExecutionStep: " + std::to_string(3));
-            entity->getAttribute("ExecutionStep")->setValue(std::to_string(++executionStep)); // advance execution step
-
-
-
-
-            break;
-        case 4:
-            Debug::cout(Debug::Level::trace, "ExecutionStep: " + std::to_string(4));
-            entity->getAttribute("ExecutionStep")->setValue(std::to_string(0)); // advance execution step
-
-
-
-            break;
+        }
     }
-}
-
-void OperatingSystem::createSwap() {
-    std::vector<DataMemoryChunk> chunks;
-    DataMemoryChunk chunk0 = DataMemoryChunk(0, true, true, true);
-    fillOS(chunk0);
-    chunks.push_back(chunk0);
-
-    DataMemoryChunk chunk1 = DataMemoryChunk(1 * PAGESIZE_IN_WORDS, true, true, false);
-    fillChunkData(chunk1, 4);
-    chunks.push_back(chunk1);
-
-    DataMemoryChunk chunk2 = DataMemoryChunk(2 * PAGESIZE_IN_WORDS, true, true, false);
-    fillChunkData(chunk2, 8);
-    chunks.push_back(chunk2);
-
-    DataMemoryChunk chunk3 = DataMemoryChunk(3 * PAGESIZE_IN_WORDS, true, true, false);
-    fillChunkData(chunk3, 15);
-    chunks.push_back(chunk3);
-
-    DataMemoryChunk chunk4 = DataMemoryChunk(4 * PAGESIZE_IN_WORDS, true, true, false);
-    fillChunkData(chunk4, 16);
-    chunks.push_back(chunk4);
-
-    DataMemoryChunk chunk5 = DataMemoryChunk(5 * PAGESIZE_IN_WORDS, false, true, false);
-    fillChunkData(chunk5, 23);
-    chunks.push_back(chunk5);
-
-    DataMemoryChunk chunk6 = DataMemoryChunk(6 * PAGESIZE_IN_WORDS, false, true, false);
-    fillChunkData(chunk6, 42);
-    chunks.push_back(chunk6);
-
-    DataMemoryChunk chunk7 = DataMemoryChunk(7 * PAGESIZE_IN_WORDS, false, true, false);
-    fillChunkData(chunk7, 108);
-    chunks.push_back(chunk7);
-
-    DataMemoryChunk chunk8 = DataMemoryChunk(8 * PAGESIZE_IN_WORDS, false, true, true);
-    fillChunkData(chunk8, 11);
-    chunks.push_back(chunk8);
-
-    DataMemoryChunk chunk9 = DataMemoryChunk(9 * PAGESIZE_IN_WORDS, false, true, true);
-    fillChunkData(chunk9, 9);
-    chunks.push_back(chunk9);
-
-    DataMemoryChunk chunk10 = DataMemoryChunk(10 * PAGESIZE_IN_WORDS, false, true, true);
-    fillChunkData(chunk10, 17);
-    chunks.push_back(chunk10);
-
-    DataMemoryChunk chunk11 = DataMemoryChunk(11 * PAGESIZE_IN_WORDS, false, true, true);
-    fillChunkData(chunk11, 5);
-    chunks.push_back(chunk11);
-
-    DataMemoryChunk chunk12 = DataMemoryChunk(12 * PAGESIZE_IN_WORDS, false, true, true);
-    fillChunkData(chunk12, 2);
-    chunks.push_back(chunk12);
-
-    DataMemoryChunk chunk13 = DataMemoryChunk(13 * PAGESIZE_IN_WORDS, false, true, true);
-    fillChunkData(chunk13, 0);
-    chunks.push_back(chunk13);
-
-    OperatingSystem::Memory_Manager()->fillSwap(chunks);
-}
-
-void OperatingSystem::fillOS(DataMemoryChunk& chunk) {
-    Information info[PAGESIZE_IN_WORDS];
-    memset(info, 0, sizeof (Information) * PAGESIZE_IN_WORDS);
-    info[0] = 536879104;
-    info[1] = 12;
-    info[2] = 545267713;
-    info[3] = 134217729;
-    chunk.setData(info);
-}
-
-void OperatingSystem::fillChunkData(DataMemoryChunk& chunk, int value) {
-    Information info[PAGESIZE_IN_WORDS];
-    std::fill(info, info + PAGESIZE_IN_WORDS, value);
-    chunk.setData(info);
 }
 
 /*

@@ -29,7 +29,7 @@ MMU::MMU(unsigned int instance) {
     //Adding page entry that references the simulator application code.
     pageTable->setPageEntry(0, 0x0000, 0x0, 0x0, true, true, true);
 
-    HW_Machine::MMU()->writeRegister(1, NO_ADDRESS);
+    HW_Machine::MMU()->writeRegister(LOGICAL_ADDRESS_MISSED_REGISTER, NO_ADDRESS);
 }
 
 MMU::~MMU() {
@@ -61,7 +61,7 @@ void MMU::updatePageTable(LogicalAddress missedAddress, PhysicalAddress baseAddr
     int pageNumber = (missedAddress & HW_MMU_Paging::mask_LogicalPage) >> HW_MMU_Paging::off_LogicalPage;
     int pageFrame = (baseAddress & HW_MMU_Paging::mask_Frame) >> HW_MMU_Paging::off_LogicalPage;
     pageTable->setPageEntry(pageNumber, pageFrame, 0x0, 0x1, page);
-    HW_Machine::MMU()->writeRegister(1, NO_ADDRESS);
+    HW_Machine::MMU()->writeRegister(LOGICAL_ADDRESS_MISSED_REGISTER, NO_ADDRESS);
 }
 
 void MMU::setModified(int pageNumber) {

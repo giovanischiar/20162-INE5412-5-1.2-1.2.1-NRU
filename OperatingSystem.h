@@ -6,7 +6,7 @@
  */
 
 #ifndef SYSTEM_H
-#define	SYSTEM_H
+#define SYSTEM_H
 
 #include "Application.h"
 
@@ -24,8 +24,14 @@
 
 #include "ModuleInvoke_HardwareEvent.h"
 
-class DataMemoryChunk;
+#include "TestApplication.h"
 
+extern const int CREATED;
+extern const int EXECUTING;
+extern const int FINISHED;
+
+class DataMemoryChunk;
+ 
 class OperatingSystem {
 private:
 
@@ -39,9 +45,9 @@ private:
 
     virtual ~OperatingSystem() {
 
-    }    
+    }
 public:
-    
+
     static void ExecuteTestCode();
 
     static Scheduler<Thread>* Process_Scheduler() {
@@ -88,18 +94,18 @@ public:
         static HardDisk* _harddisk = new HardDisk(0);
         return _harddisk;
     }
-    
-    static void SetBootApplication(Application* app);    
+
+    static void SetBootApplication(Application* app);
     static void LoadApplication(Application* app, MMU::PhysicalAddress address);
     static void Init();
-    
+
 private:
     static HW_MMU::Information asmm(std::string mnemonic);
     
-    static void createSwap(); 
-    static void fillOS(DataMemoryChunk& chunk);
-    static void fillChunkData(DataMemoryChunk& chunk, int value);
+    static TestApplication* testApplication;
+    static int currentMemoryAccess;
+
 };
 
-#endif	/* SYSTEM_H */
+#endif /* SYSTEM_H */
 

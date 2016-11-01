@@ -81,6 +81,7 @@ OBJECTFILES= \
 	${OBJECTDIR}/Simul_Util.o \
 	${OBJECTDIR}/Simulator.o \
 	${OBJECTDIR}/SourceModule.o \
+	${OBJECTDIR}/TestApplication.o \
 	${OBJECTDIR}/Util_Queue.o \
 	${OBJECTDIR}/Util_Scheduling_Queue.o \
 	${OBJECTDIR}/VirtualMemorySwap.o \
@@ -360,6 +361,11 @@ ${OBJECTDIR}/SourceModule.o: SourceModule.cpp
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
 	$(COMPILE.cc) -g -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/SourceModule.o SourceModule.cpp
+
+${OBJECTDIR}/TestApplication.o: TestApplication.cpp
+	${MKDIR} -p ${OBJECTDIR}
+	${RM} "$@.d"
+	$(COMPILE.cc) -g -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/TestApplication.o TestApplication.cpp
 
 ${OBJECTDIR}/Util_Queue.o: Util_Queue.cpp
 	${MKDIR} -p ${OBJECTDIR}
@@ -1049,6 +1055,19 @@ ${OBJECTDIR}/SourceModule_nomain.o: ${OBJECTDIR}/SourceModule.o SourceModule.cpp
 	    $(COMPILE.cc) -g -Dmain=__nomain -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/SourceModule_nomain.o SourceModule.cpp;\
 	else  \
 	    ${CP} ${OBJECTDIR}/SourceModule.o ${OBJECTDIR}/SourceModule_nomain.o;\
+	fi
+
+${OBJECTDIR}/TestApplication_nomain.o: ${OBJECTDIR}/TestApplication.o TestApplication.cpp 
+	${MKDIR} -p ${OBJECTDIR}
+	@NMOUTPUT=`${NM} ${OBJECTDIR}/TestApplication.o`; \
+	if (echo "$$NMOUTPUT" | ${GREP} '|main$$') || \
+	   (echo "$$NMOUTPUT" | ${GREP} 'T main$$') || \
+	   (echo "$$NMOUTPUT" | ${GREP} 'T _main$$'); \
+	then  \
+	    ${RM} "$@.d";\
+	    $(COMPILE.cc) -g -Dmain=__nomain -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/TestApplication_nomain.o TestApplication.cpp;\
+	else  \
+	    ${CP} ${OBJECTDIR}/TestApplication.o ${OBJECTDIR}/TestApplication_nomain.o;\
 	fi
 
 ${OBJECTDIR}/Util_Queue_nomain.o: ${OBJECTDIR}/Util_Queue.o Util_Queue.cpp 
